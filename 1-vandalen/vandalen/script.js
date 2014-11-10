@@ -17,8 +17,8 @@ var makePerson = function(persArr){
     persArrCopy.sort(function(person1,person2) {
         return person1.name.localeCompare(person2.name);
     });
-    persArrCopy.map(function(currentValue, index){
-        names += currentValue.name;
+    persArrCopy.map(function(person, index){
+        names += person.name;
         names += (index === persArrCopy.length - 1) ? "" : ", ";
     });
     
