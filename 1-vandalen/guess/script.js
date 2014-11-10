@@ -26,7 +26,7 @@ window.onload = function(){
 		
 		guesses -= 1; // Om värdet inte var en giltlig gissning, räkna den inte
 		
-		return [false, "Det inmatade värdet är inte ett nummer"];
+		return [false, "Det inmatade värdet var inte ett nummer! Försök igen!"];
 	};
 	
 	// ------------------------------------------------------------------------------
