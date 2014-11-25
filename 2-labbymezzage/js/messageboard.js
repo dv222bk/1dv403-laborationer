@@ -2,17 +2,54 @@
 
 window.onload = function() {
         var what = new MessageBoard("msg1");
+        what.pushMessage("what");
         what.pushMessage("what what");
-        alert(what.getMessages());
 }
 
 function MessageBoard(elementID) {
-    var section, div, header, p, button, element;
+    var appBody, div, header, appVersion, textarea, submitButton, element;
     var that = this;
     var messages = [];
     
+    /* App DOM */
+    element = document.getElementById(elementID);
+    
+    /* Section */
+    appBody = document.createElement("section");
+    appBody.className = "LabbyMezzage";
+    element.appendChild(appBody);
+    
+    /* Header */
+    header = document.createElement("header");
+    appVersion = document.createElement("p");
+    appVersion.innerHTML = "v0.1b";
+    header.appendChild(appVersion);
+    appBody.appendChild(header);
+    
+    /* Holder div */
+    div = document.createElement("div");
+    appBody.appendChild(div);
+    
+    /* Textarea */
+    textarea = document.createElement("textarea");
+    div.appendChild(document.createElement("textarea"));
+    
+    /* Send-button */
+    submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.innerHTML = "Skriv";
+    submitButton.onclick = function(e) {
+        that.sendMessage();
+        return false;
+    }
+    div.appendChild(submitButton);
+    
     this.getMessages = function() {
         return messages;
+    }
+    
+    this.getElementID = function() {
+        return elementID;
     }
     
     this.getMessage = function(index) {
@@ -23,39 +60,11 @@ function MessageBoard(elementID) {
         messages.push(new Message(_message, new Date()));
     }
     
-    /* App DOM */
-    element = document.getElementById(elementID);
-    
-    /* Section */
-    section = document.createElement("section");
-    section.className = "LabbyMezzage";
-    element.appendChild(section);
-    
-    /* Holder div */
-    div = document.createElement("div");
-    section.appendChild(div);
-    
-    /* Header */
-    header = document.createElement("header");
-    p = document.createElement("p");
-    p.innerHTML = "v0.1b";
-    header.appendChild(p);
-    div.appendChild(header);
-    
-    /* Textarea */
-    div.appendChild(document.createElement("textarea"));
-    
-    /* Send-button */
-    button = document.createElement("button");
-    button.type = "submit";
-    button.innerHTML = "Skriv";
-    button.onclick = function(e) {
-        that.sendMessage();
-        return false;
+    this.getTextAreaValue = function() {
+        return textarea.value;
     }
-    div.appendChild(button);
 }
 
 MessageBoard.prototype.sendMessage = function() {
-    
+    this.pushMessage(document.getElementById(this.getElementID()).getElementsByTagName("textarea")[0].value);
 }
