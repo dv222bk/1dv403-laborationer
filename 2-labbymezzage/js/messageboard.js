@@ -40,7 +40,7 @@ function MessageBoard(elementID) {
     submitButton.onclick = function(e) {
         e.preventDefault();
         that.sendMessage();
-        alert(that.getMessage(that.getMessages().length - 1).toString());
+        alert(that.getMessages()[that.getMessages().length - 1].toString());
         return false;
     }
     div.appendChild(submitButton);
