@@ -39,7 +39,8 @@ function MessageBoard(elementID) {
     submitButton.innerHTML = "Skriv";
     submitButton.onclick = function(e) {
         e.preventDefault();
-        that.pushMessage(element.getElementsByTagName("textarea")[0].value);
+        that.sendMessage();
+        alert(that.getMessage(that.getMessages().length - 1).toString());
         return false;
     }
     div.appendChild(submitButton);
@@ -51,18 +52,10 @@ function MessageBoard(elementID) {
     this.getElementID = function() {
         return elementID;
     }
-    
-    this.getMessage = function(index) {
-        return messages[index];
-    }
-    
-    this.pushMessage = function(_message) {
-        messages.push(new Message(_message, new Date()));
-    }
-    
-    this.getTextAreaValue = function() {
-        return textarea.value;
-    }
+}
+
+MessageBoard.prototype.sendMessage = function() {
+    this.getMessages().push(new Message(document.getElementById(this.getElementID()).getElementsByTagName("textarea")[0].value, new Date()));
 }
 
 window.onload = function() {
