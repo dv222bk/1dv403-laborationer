@@ -1,13 +1,7 @@
 "use strict";
 
-window.onload = function() {
-        var what = new MessageBoard("msg1");
-        what.pushMessage("what");
-        what.pushMessage("what what");
-}
-
 function MessageBoard(elementID) {
-    var appBody, div, header, appVersion, textarea, submitButton, element;
+    var appBody, div, header, appVersion, messageCount, textarea, submitButton, element;
     var that = this;
     var messages = [];
     
@@ -30,6 +24,11 @@ function MessageBoard(elementID) {
     div = document.createElement("div");
     appBody.appendChild(div);
     
+    /* Message Counter */
+    messageCount = document.createElement("span");
+    messageCount.innerHTML = "Antal Meddelanden " + messages.length;
+    div.appendChild(messageCount);
+    
     /* Textarea */
     textarea = document.createElement("textarea");
     div.appendChild(document.createElement("textarea"));
@@ -39,7 +38,8 @@ function MessageBoard(elementID) {
     submitButton.type = "submit";
     submitButton.innerHTML = "Skriv";
     submitButton.onclick = function(e) {
-        that.sendMessage();
+        e.preventDefault();
+        that.pushMessage(element.getElementsByTagName("textarea")[0].value);
         return false;
     }
     div.appendChild(submitButton);
@@ -65,6 +65,6 @@ function MessageBoard(elementID) {
     }
 }
 
-MessageBoard.prototype.sendMessage = function() {
-    this.pushMessage(document.getElementById(this.getElementID()).getElementsByTagName("textarea")[0].value);
+window.onload = function() {
+        var what = new MessageBoard("msg1");
 }
