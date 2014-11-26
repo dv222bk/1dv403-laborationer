@@ -85,18 +85,28 @@ MessageBoard.prototype.renderMessage = function(messageID) {
     var messageText = document.createElement("p");
     var messageDate = document.createElement("p");
     var imgRemove = document.createElement("img");
+    var imgTimeStamp = document.createElement("img");
     var insertDestination = this.root.querySelector("div");
-    imgRemove.alt = "Remove this message";
-    imgRemove.title = "Remove this message";
+    imgRemove.alt = "En lila icon med en klocka på";
+    imgRemove.title = "Ta bort meddelandet";
     imgRemove.src = "images/crossIcon.png";
     imgRemove.onclick = function(e) {
         e.preventDefault();
         that.removeMessage(messageID);
         return false;
     }
+    imgTimeStamp.alt = "En röd icon med ett kryss på";
+    imgTimeStamp.title = "Kolla vilken tid inlägget skrevs";
+    imgTimeStamp.src = "images/clockIcon.png";
+    imgTimeStamp.onclick = function(e) {
+        e.preventDefault();
+        alert(that.getMessage(messageID).getTimeStamp());
+        return false;
+    }
     messageText.innerHTML = this.getMessage(messageID).getHTMLText();
     messageDate.innerHTML = this.getMessage(messageID).getDateText();
     messageContainer.appendChild(imgRemove);
+    messageContainer.appendChild(imgTimeStamp);
     messageContainer.appendChild(messageText);
     messageContainer.appendChild(messageDate);
     /* Insert the new message at the top of the holder div, at the bottom of the message list */

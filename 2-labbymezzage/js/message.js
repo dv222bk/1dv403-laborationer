@@ -28,5 +28,11 @@ Message.prototype.getHTMLText = function() {
 }
 
 Message.prototype.getDateText = function() {
-    return this.getDate().getHours() + ":" + this.getDate().getMinutes() + ":" + this.getDate().getSeconds();
+    return this.getDate().toLocaleTimeString();
+}
+
+Message.prototype.getTimeStamp = function() {
+    var monthNames = [ "januari", "februari", "mars", "april", "maj", "juni",
+    "juli", "agusti", "september", "october", "november", "december" ];
+    return "Inlägget skapades den " + (this.getDate().getMonth() + 1) + " " + monthNames[this.getDate().getMonth()] + " " + this.getDate().getFullYear() + " klockan " + this.getDateText();
 }
