@@ -8,11 +8,11 @@ function MessageBoard(elementID) {
     
     this.getMessages = function() {
         return messages;
-    }
+    };
     
     this.getMessage = function(messageID) {
         return messages[messageID];
-    }
+    };
     
     this.createApp();
 }
@@ -44,7 +44,16 @@ MessageBoard.prototype.createApp = function() {
     
     /* Textarea */
     textarea = document.createElement("textarea");
-    div.appendChild(document.createElement("textarea"));
+    textarea.onkeypress = function(e) {
+        if(e.keyCode == 13) {
+            if(!e.shiftKey) {
+                e.preventDefault();
+                that.sendMessage();
+                return false;
+            }
+        }
+    };
+    div.appendChild(textarea);
     
     /* Send-button */
     submitButton = document.createElement("button");
@@ -54,13 +63,13 @@ MessageBoard.prototype.createApp = function() {
         e.preventDefault();
         that.sendMessage();
         return false;
-    }
+    };
     div.appendChild(submitButton);
-}
+};
 
 MessageBoard.prototype.updateMessageCount = function() {
     this.root.querySelector("span").innerHTML = "Antal Meddelanden: " + this.getMessages().length;
-}
+};
 
 MessageBoard.prototype.sendMessage = function() {
     var textarea = this.root.querySelector("textarea");
@@ -71,13 +80,13 @@ MessageBoard.prototype.sendMessage = function() {
     }
     textarea.value = "";
     this.renderMessage(this.getMessages().length - 1);
-}
+};
 
 MessageBoard.prototype.removeMessage = function(messageID) {
     this.getMessages().splice(messageID, 1);
     this.renderMessages();
     this.updateMessageCount();
-}
+};
 
 MessageBoard.prototype.renderMessage = function(messageID) {
     var that = this;
@@ -91,10 +100,12 @@ MessageBoard.prototype.renderMessage = function(messageID) {
     imgRemove.title = "Ta bort meddelandet";
     imgRemove.src = "images/crossIcon.png";
     imgRemove.onclick = function(e) {
-        e.preventDefault();
-        that.removeMessage(messageID);
-        return false;
-    }
+        if(window.confirm("Vill du verkligen radera meddelandet?")) {
+            e.preventDefault();
+            that.removeMessage(messageID);
+            return false;
+        }
+    };
     imgTimeStamp.alt = "En röd icon med ett kryss på";
     imgTimeStamp.title = "Kolla vilken tid inlägget skrevs";
     imgTimeStamp.src = "images/clockIcon.png";
@@ -102,7 +113,7 @@ MessageBoard.prototype.renderMessage = function(messageID) {
         e.preventDefault();
         alert(that.getMessage(messageID).getTimeStamp());
         return false;
-    }
+    };
     messageText.innerHTML = this.getMessage(messageID).getHTMLText();
     messageDate.innerHTML = this.getMessage(messageID).getDateText();
     messageContainer.appendChild(imgRemove);
@@ -112,7 +123,7 @@ MessageBoard.prototype.renderMessage = function(messageID) {
     /* Insert the new message at the top of the holder div, at the bottom of the message list */
     insertDestination.insertBefore(messageContainer, insertDestination.childNodes[messageID]);
     this.updateMessageCount();
-}
+};
 
 MessageBoard.prototype.renderMessages = function() {
     var divs, i;
@@ -129,8 +140,8 @@ MessageBoard.prototype.renderMessages = function() {
     for(i = 0; i < this.getMessages().length; i+=1) {
         this.renderMessage(i);
     }
-}
+};
 
 window.onload = function() {
     var what = new MessageBoard("msg1");
-}
+};
