@@ -1,17 +1,34 @@
 "use strict";
 
 function MessageBoard(elementID) {
-    var appBody, div, header, appVersion, messageCount, textarea, submitButton, element;
-    var that = this;
     var messages = [];
     
-    /* App DOM */
-    element = document.getElementById(elementID);
+    /* root element */
+    this.root = document.getElementById(elementID);
+    
+    this.getMessages = function() {
+        return messages;
+    }
+    
+    this.createApp();
+}
+
+MessageBoard.prototype.sendMessage = function() {
+    var textarea = this.root.querySelector("textarea");
+    if(textarea.value.trim() !== "") {
+        this.getMessages().push(new Message(textarea.value.trim(), new Date()));
+    }
+    textarea.value = "";
+}
+
+MessageBoard.prototype.createApp = function() {
+    var appBody, div, header, appVersion, messageCount, textarea, submitButton;
+    var that = this;
     
     /* Section */
     appBody = document.createElement("section");
     appBody.className = "LabbyMezzage";
-    element.appendChild(appBody);
+    this.root.appendChild(appBody);
     
     /* Header */
     header = document.createElement("header");
@@ -26,7 +43,7 @@ function MessageBoard(elementID) {
     
     /* Message Counter */
     messageCount = document.createElement("span");
-    messageCount.innerHTML = "Antal Meddelanden " + messages.length;
+    messageCount.innerHTML = "Antal Meddelanden " + this.getMessages().length;
     div.appendChild(messageCount);
     
     /* Textarea */
@@ -44,20 +61,8 @@ function MessageBoard(elementID) {
         return false;
     }
     div.appendChild(submitButton);
-    
-    this.getMessages = function() {
-        return messages;
-    }
-    
-    this.getAppBody = function() {
-        return appBody;
-    }
-}
-
-MessageBoard.prototype.sendMessage = function() {
-    this.getMessages().push(new Message(this.getAppBody().getElementsByTagName("textarea")[0].value, new Date()));
 }
 
 window.onload = function() {
-        var what = new MessageBoard("msg1");
+    var what = new MessageBoard("msg1");
 }
