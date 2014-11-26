@@ -49,7 +49,6 @@ MessageBoard.prototype.createApp = function() {
     submitButton.onclick = function(e) {
         e.preventDefault();
         that.sendMessage();
-        alert(that.getMessages()[that.getMessages().length - 1].toString());
         return false;
     }
     div.appendChild(submitButton);
@@ -57,6 +56,8 @@ MessageBoard.prototype.createApp = function() {
 
 MessageBoard.prototype.sendMessage = function() {
     var textarea = this.root.querySelector("textarea");
+    // Remove all HTML tags
+    textarea.value = textarea.value.replace( /<[^>]+>/g, '' );
     if(textarea.value.trim() !== "") {
         this.getMessages().push(new Message(textarea.value.trim(), new Date()));
     }

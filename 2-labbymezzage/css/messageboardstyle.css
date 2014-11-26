@@ -69,8 +69,22 @@ table {
 }
 .LabbyMezzage div {
     width: 100%;
-    background-color: white;
+    background-color: #FFFFFF;
     padding: 0.5em;
+}
+.LabbyMezzage div div {
+    width: 98%;
+    background-color: #CDEB8B;
+    color: #777777;
+    padding: 1%;
+    margin-top: 0.5em;
+    border: 0.1em solid #333333;
+    border-radius: 0.2em;
+    box-shadow: 2px 2px 2px #666666;
+}
+.LabbyMezzage div div p:last-child {
+    font-size: 0.8em;
+    text-align: right;
 }
 .LabbyMezzage div span {
     display: block;
