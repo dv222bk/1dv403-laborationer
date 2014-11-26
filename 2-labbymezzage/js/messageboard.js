@@ -13,14 +13,6 @@ function MessageBoard(elementID) {
     this.createApp();
 }
 
-MessageBoard.prototype.sendMessage = function() {
-    var textarea = this.root.querySelector("textarea");
-    if(textarea.value.trim() !== "") {
-        this.getMessages().push(new Message(textarea.value.trim(), new Date()));
-    }
-    textarea.value = "";
-}
-
 MessageBoard.prototype.createApp = function() {
     var appBody, div, header, appVersion, messageCount, textarea, submitButton;
     var that = this;
@@ -61,6 +53,45 @@ MessageBoard.prototype.createApp = function() {
         return false;
     }
     div.appendChild(submitButton);
+}
+
+MessageBoard.prototype.sendMessage = function() {
+    var textarea = this.root.querySelector("textarea");
+    if(textarea.value.trim() !== "") {
+        this.getMessages().push(new Message(textarea.value.trim(), new Date()));
+    }
+    textarea.value = "";
+    this.renderMessage(this.getMessages().length - 1);
+}
+
+MessageBoard.prototype.renderMessage = function(messageID) {
+    var messageContainer = document.createElement("div");
+    var messageText = document.createElement("p");
+    var messageDate = document.createElement("p");
+    var insertDestination = this.root.querySelector('div');
+    messageText.innerHTML = this.getMessages()[messageID].getHTMLText();
+    messageDate.innerHTML = this.getMessages()[messageID].getDateText();
+    messageContainer.appendChild(messageText);
+    messageContainer.appendChild(messageDate);
+    /* Insert the new message at the top of the holder div, at the bottom of the message list */
+    insertDestination.insertBefore(messageContainer, insertDestination.childNodes[messageID]);
+}
+
+MessageBoard.prototype.renderMessages = function() {
+    var divs, i;
+    
+    // Remove all messages
+    divs = this.root.querySelectorAll("div");
+    /* First div element is the holder div, don't remove it */
+    for(i = 1; i < divs.length; i+=1) {
+        /* To remove an object, you need to target the parent */
+        divs[i].parentNode.removeChild(divs[i]);
+    }
+    
+    // Render all messages
+    for(i = 0; i < this.getMessages().length; i+=1) {
+        this.renderMessage(i);
+    }
 }
 
 window.onload = function() {
