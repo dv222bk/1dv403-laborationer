@@ -49,13 +49,13 @@ function MessageBoard(elementID) {
         return messages;
     }
     
-    this.getElementID = function() {
-        return elementID;
+    this.getAppBody = function() {
+        return appBody;
     }
 }
 
 MessageBoard.prototype.sendMessage = function() {
-    this.getMessages().push(new Message(document.getElementById(this.getElementID()).getElementsByTagName("textarea")[0].value, new Date()));
+    this.getMessages().push(new Message(this.getAppBody().getElementsByTagName("textarea")[0].value, new Date()));
 }
 
 window.onload = function() {
