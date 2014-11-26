@@ -77,9 +77,9 @@ MessageBoard.prototype.sendMessage = function() {
     textarea.value = textarea.value.replace( /<[^>]+>/g, '' );
     if(textarea.value.trim() !== "") {
         this.getMessages().push(new Message(textarea.value.trim(), new Date()));
+        this.renderMessage(this.getMessages().length - 1);
     }
     textarea.value = "";
-    this.renderMessage(this.getMessages().length - 1);
 };
 
 MessageBoard.prototype.removeMessage = function(messageID) {
