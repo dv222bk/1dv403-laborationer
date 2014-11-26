@@ -51,10 +51,9 @@ table {
 }
 
 /*     START OF CSS CHANGES     */
-
 .LabbyMezzage {
-    display: block;
     width: 90%;
+    height: 100%;
     padding: 2em 5%;
     background-color: #C3D9FF;
 }
@@ -71,6 +70,7 @@ table {
     width: 100%;
     background-color: #FFFFFF;
     padding: 0.5em;
+    border-radius: 0.2em;
 }
 .LabbyMezzage div div {
     width: 98%;
@@ -79,12 +79,20 @@ table {
     padding: 1%;
     margin-top: 0.5em;
     border: 0.1em solid #333333;
-    border-radius: 0.2em;
     box-shadow: 2px 2px 2px #666666;
 }
+.LabbyMezzage div div:first-child {
+    margin: 0;
+}
+
 .LabbyMezzage div div p:last-child {
     font-size: 0.8em;
     text-align: right;
+}
+
+.LabbyMezzage div div img {
+    display: block;
+    float: right;
 }
 .LabbyMezzage div span {
     display: block;
@@ -93,6 +101,7 @@ table {
     margin: 1em 0;
 }
 .LabbyMezzage div textarea {
+    background-color: #EEFFC9;
     width: 99%;
     height: 10em;
 }

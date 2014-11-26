@@ -10,6 +10,10 @@ function MessageBoard(elementID) {
         return messages;
     }
     
+    this.getMessage = function(messageID) {
+        return messages[messageID];
+    }
+    
     this.createApp();
 }
 
@@ -35,7 +39,7 @@ MessageBoard.prototype.createApp = function() {
     
     /* Message Counter */
     messageCount = document.createElement("span");
-    messageCount.innerHTML = "Antal Meddelanden " + this.getMessages().length;
+    messageCount.innerHTML = "Antal Meddelanden: " + this.getMessages().length;
     div.appendChild(messageCount);
     
     /* Textarea */
@@ -54,6 +58,10 @@ MessageBoard.prototype.createApp = function() {
     div.appendChild(submitButton);
 }
 
+MessageBoard.prototype.updateMessageCount = function() {
+    this.root.querySelector("span").innerHTML = "Antal Meddelanden: " + this.getMessages().length;
+}
+
 MessageBoard.prototype.sendMessage = function() {
     var textarea = this.root.querySelector("textarea");
     // Remove all HTML tags
@@ -65,17 +73,35 @@ MessageBoard.prototype.sendMessage = function() {
     this.renderMessage(this.getMessages().length - 1);
 }
 
+MessageBoard.prototype.removeMessage = function(messageID) {
+    this.getMessages().splice(messageID, 1);
+    this.renderMessages();
+    this.updateMessageCount();
+}
+
 MessageBoard.prototype.renderMessage = function(messageID) {
+    var that = this;
     var messageContainer = document.createElement("div");
     var messageText = document.createElement("p");
     var messageDate = document.createElement("p");
-    var insertDestination = this.root.querySelector('div');
-    messageText.innerHTML = this.getMessages()[messageID].getHTMLText();
-    messageDate.innerHTML = this.getMessages()[messageID].getDateText();
+    var imgRemove = document.createElement("img");
+    var insertDestination = this.root.querySelector("div");
+    imgRemove.alt = "Remove this message";
+    imgRemove.title = "Remove this message";
+    imgRemove.src = "images/crossIcon.png";
+    imgRemove.onclick = function(e) {
+        e.preventDefault();
+        that.removeMessage(messageID);
+        return false;
+    }
+    messageText.innerHTML = this.getMessage(messageID).getHTMLText();
+    messageDate.innerHTML = this.getMessage(messageID).getDateText();
+    messageContainer.appendChild(imgRemove);
     messageContainer.appendChild(messageText);
     messageContainer.appendChild(messageDate);
     /* Insert the new message at the top of the holder div, at the bottom of the message list */
     insertDestination.insertBefore(messageContainer, insertDestination.childNodes[messageID]);
+    this.updateMessageCount();
 }
 
 MessageBoard.prototype.renderMessages = function() {
