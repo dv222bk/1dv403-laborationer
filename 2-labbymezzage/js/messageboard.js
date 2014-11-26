@@ -89,13 +89,11 @@ MessageBoard.prototype.removeMessage = function(messageID) {
 };
 
 MessageBoard.prototype.renderMessage = function(messageID) {
+    var messageContainer, messageText, messageDate, imgRemove, imgTimeStamp, insertDestination;
     var that = this;
-    var messageContainer = document.createElement("div");
-    var messageText = document.createElement("p");
-    var messageDate = document.createElement("p");
-    var imgRemove = document.createElement("img");
-    var imgTimeStamp = document.createElement("img");
-    var insertDestination = this.root.querySelector("div");
+    
+    /* RemoveMsg Icon */
+    imgRemove = document.createElement("img");
     imgRemove.alt = "En lila icon med en klocka på";
     imgRemove.title = "Ta bort meddelandet";
     imgRemove.src = "images/crossIcon.png";
@@ -106,6 +104,9 @@ MessageBoard.prototype.renderMessage = function(messageID) {
             return false;
         }
     };
+    
+    /* TimeStamp Icon */
+    imgTimeStamp = document.createElement("img");
     imgTimeStamp.alt = "En röd icon med ett kryss på";
     imgTimeStamp.title = "Kolla vilken tid inlägget skrevs";
     imgTimeStamp.src = "images/clockIcon.png";
@@ -114,13 +115,24 @@ MessageBoard.prototype.renderMessage = function(messageID) {
         alert(that.getMessage(messageID).getTimeStamp());
         return false;
     };
+    
+    /* MsgText */
+    messageText = document.createElement("p");
     messageText.innerHTML = this.getMessage(messageID).getHTMLText();
+    
+    /* MsgDate */
+    messageDate = document.createElement("p");
     messageDate.innerHTML = this.getMessage(messageID).getDateText();
+    
+    /* Container */
+    messageContainer = document.createElement("div");
     messageContainer.appendChild(imgRemove);
     messageContainer.appendChild(imgTimeStamp);
     messageContainer.appendChild(messageText);
     messageContainer.appendChild(messageDate);
+    
     /* Insert the new message at the top of the holder div, at the bottom of the message list */
+    insertDestination = this.root.querySelector("div");
     insertDestination.insertBefore(messageContainer, insertDestination.childNodes[messageID]);
     this.updateMessageCount();
 };
@@ -140,8 +152,4 @@ MessageBoard.prototype.renderMessages = function() {
     for(i = 0; i < this.getMessages().length; i+=1) {
         this.renderMessage(i);
     }
-};
-
-window.onload = function() {
-    var what = new MessageBoard("msg1");
 };
