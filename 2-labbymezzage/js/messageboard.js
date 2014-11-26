@@ -134,7 +134,12 @@ MessageBoard.prototype.renderMessage = function(messageID) {
     /* Insert the new message at the top of the holder div, at the bottom of the message list */
     insertDestination = this.root.querySelector("div");
     insertDestination.insertBefore(messageContainer, insertDestination.childNodes[messageID]);
+    
+    /* Update message counter */
     this.updateMessageCount();
+    
+    /* Scroll to the bottom of the page, in case the user wasn't already there */
+    window.scrollTo(0, document.body.scrollHeight);
 };
 
 MessageBoard.prototype.renderMessages = function() {
