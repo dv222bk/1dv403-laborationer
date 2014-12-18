@@ -46,7 +46,6 @@ MemoryGame.prototype.wrongTiles = function(memoryImage1, memoryImage2) {
     memoryImage2.src = "memory/pics/0.png";
     memoryImage1.className = "";
     memoryImage2.className = "";
-    this.setFlippedImages(0);
 }
 
 MemoryGame.prototype.createApp = function() {
@@ -92,7 +91,6 @@ MemoryGame.prototype.createApp = function() {
 MemoryGame.prototype.checkImage = function(memoryImage, imgNumber) {
     memoryImage.src = "memory/pics/" + this.getPictureArray()[imgNumber] + ".png";
     memoryImage.className = "flipped";
-    this.setFlippedImages(this.getFlippedImages() + 1);
     this.checkStatus(memoryImage);
 };
 
@@ -101,26 +99,27 @@ MemoryGame.prototype.checkStatus = function(clickedImage) {
     flippedImages = this.root.querySelectorAll(".flipped");
     if(flippedImages.length == 2) {
         this.setTries(this.getTries() + 1);
-        memoryImage1 = this.root.querySelectorAll(".flipped")[0];
-        memoryImage2 = this.root.querySelectorAll(".flipped")[1];
+        memoryImage1 = flippedImages[0];
+        memoryImage2 = flippedImages[1];
         if(memoryImage1.src !== memoryImage2.src) {
             this.startWrongTiles(memoryImage1, memoryImage2);
         } else {
             memoryImage1.className = "complete";
             memoryImage2.className = "complete";
-            this.setFlippedImages(0);
             if(this.root.querySelectorAll(".complete").length === this.getPictureArray().length) {
                 this.gameEnd();
             }
         }
-    } else if(flippedImages.length > 2) {
+    } else if(flippedImages.length > 2) { // If the timeinterval hasn't finished yet (which results in there being more than 2 images with the class "flipped")
         this.stopWrongTiles();
-        for(i = 0; i < 3; i+=1) {
-            if(this.root.querySelectorAll(".flipped")[i] !== clickedImage){
-                memoryImage1 = this.root.querySelectorAll(".flipped")[i];
+        var wrongTiles = [];
+        /* Find the tiles that isn't the tile the player just clicked on */
+        for(i = 0; i < flippedImages.length; i+=1) {
+            if(flippedImages[i] !== clickedImage){
+                wrongTiles.push(flippedImages[i]); 
             }
-        } 
-        this.setFlippedImages(1);
+        }
+        this.wrongTiles(wrongTiles[0], wrongTiles[1]);
     }
 };
 
