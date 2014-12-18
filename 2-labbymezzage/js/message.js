@@ -34,5 +34,5 @@ Message.prototype.getDateText = function() {
 Message.prototype.getTimeStamp = function() {
     var monthNames = [ "januari", "februari", "mars", "april", "maj", "juni",
     "juli", "agusti", "september", "october", "november", "december" ];
-    return "Inlägget skapades den " + (this.getDate().getMonth() + 1) + " " + monthNames[this.getDate().getMonth()] + " " + this.getDate().getFullYear() + " klockan " + this.getDateText();
+    return "Inlägget skapades den " + (this.getDate().getDate()) + " " + monthNames[this.getDate().getMonth()] + " " + this.getDate().getFullYear() + " klockan " + this.getDateText();
 };
