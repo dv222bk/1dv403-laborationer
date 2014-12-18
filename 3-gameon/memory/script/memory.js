@@ -50,7 +50,7 @@ function MemoryGame(elementID) {
         }, 1000);
     };
 
-    this.stopWrongTiles = function() {
+    this.stopWrongTiles = function() { // If the player clicks before the animation is finished, the animation should be cancelled
         clearInterval(wrongTiles);
     };
 
@@ -174,7 +174,11 @@ MemoryGame.prototype.checkStatus = function(clickedImage) {
 };
 
 MemoryGame.prototype.gameEnd = function() {
-    alert("Du vann! Du använde dig av " + this.getTries() + " försök!");
+    var appBody, pElement;
+    appBody = this.root.querySelector("section");
+    pElement = document.createElement("p");
+    pElement.innerHTML = "Du vann! Det tog dig " + this.getTries() + " par vändningar!";
+    appBody.appendChild(pElement);
 };
 
 MemoryGame.prototype.newGame = function() {
