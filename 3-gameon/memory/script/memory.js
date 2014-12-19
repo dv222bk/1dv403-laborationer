@@ -1,3 +1,5 @@
+"use strict";
+
 function MemoryGame(elementID) {
     var pictureArray, tries, wrongTiles, rows, cols;
     var that = this;
