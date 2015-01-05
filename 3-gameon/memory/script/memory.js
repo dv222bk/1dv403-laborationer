@@ -1,7 +1,7 @@
 "use strict";
 
 function MemoryGame(elementID) {
-    var pictureArray, tries, wrongTiles, rows, cols;
+    var pictureArray, tries, complete, wrongTiles, rows, cols;
     var that = this;
     
     /* root element */
@@ -12,6 +12,7 @@ function MemoryGame(elementID) {
     cols = 4;
     pictureArray = RandomGenerator.getPictureArray(4, 4);
     tries = 0;
+    complete = 0;
     
     /* functions */
     this.getPictureArray = function() {
@@ -45,6 +46,14 @@ function MemoryGame(elementID) {
     this.setTries = function(number) {
         tries = number;
     };
+    
+    this.getComplete = function() {
+        return complete;
+    }
+    
+    this.increaseComplete = function() {
+        complete += 2;
+    }
     
     this.startWrongTiles = function(memoryA1, memoryA2) {
         wrongTiles = setTimeout(function() {
@@ -159,7 +168,8 @@ MemoryGame.prototype.checkStatus = function(clickedImageA) {
             /* Mark the correct tiles so they can't be clicked again */
             memoryA1.className = "complete";
             memoryA2.className = "complete";
-            if(this.root.querySelectorAll(".complete").length === this.getPictureArray().length) {
+            this.increaseComplete();
+            if(this.getComplete() === this.getPictureArray().length) {
                 this.gameEnd();
             }
         }
