@@ -46,9 +46,9 @@ function MemoryGame(elementID) {
         tries = number;
     };
     
-    this.startWrongTiles = function(memoryImage1, memoryImage2) {
+    this.startWrongTiles = function(memoryA1, memoryA2) {
         wrongTiles = setTimeout(function() {
-            that.wrongTiles(memoryImage1, memoryImage2);
+            that.wrongTiles(memoryA1, memoryA2);
         }, 1000);
     };
 
@@ -59,15 +59,15 @@ function MemoryGame(elementID) {
     this.createApp();
 }
 
-MemoryGame.prototype.wrongTiles = function(memoryImage1, memoryImage2) {
-    memoryImage1.src = "memory/pics/0.png";
-    memoryImage2.src = "memory/pics/0.png";
-    memoryImage1.className = "";
-    memoryImage2.className = "";
+MemoryGame.prototype.wrongTiles = function(memoryA1, memoryA2) {
+    memoryA1.childNodes[0].src = "memory/pics/0.png";
+    memoryA2.childNodes[0].src = "memory/pics/0.png";
+    memoryA1.className = "";
+    memoryA2.className = "";
 };
 
 MemoryGame.prototype.createApp = function() {
-    var appBody, header, appVersion, select, option, x, y, i, button, col, row, rowDiv, memoryImage;
+    var appBody, header, appVersion, select, option, x, y, i, button, col, row, rowDiv, memoryA, memoryImage;
     var that = this;
     
     /* Section */
@@ -119,44 +119,46 @@ MemoryGame.prototype.createApp = function() {
         appBody.appendChild(rowDiv);
         
         for(col = 0; col < this.getCols(); col+=1) {
-            memoryImage = document.createElement("img");
-            memoryImage.alt = "Ett memory kort";
-            memoryImage.title = "Ett memory kort";
-            memoryImage.src = "memory/pics/0.png";
-            /* Add the col and row to the image element so that we can easily get and use them later */
-            memoryImage.col = col;
-            memoryImage.row = row;
-            memoryImage.onclick = function(e) {
+            memoryA = document.createElement("a");
+            /* Add the col and row to the a element so that we can easily get and use them later */
+            memoryA.col = col;
+            memoryA.row = row;
+            memoryA.onclick = function(e) {
                 e.preventDefault();
                 if(this.className !== "flipped" && this.className !== "complete") {
                     that.checkImage(this, (this.row * that.getCols() + this.col));
                 }
                 return false;
             };
-            rowDiv.appendChild(memoryImage);
+            memoryImage = document.createElement("img");
+            memoryImage.alt = "Ett memory kort";
+            memoryImage.title = "Ett memory kort";
+            memoryImage.src = "memory/pics/0.png";
+            memoryA.appendChild(memoryImage);
+            rowDiv.appendChild(memoryA);
         }
     }
 };
 
-MemoryGame.prototype.checkImage = function(memoryImage, imgNumber) {
-    memoryImage.src = "memory/pics/" + this.getPictureArray()[imgNumber] + ".png";
-    memoryImage.className = "flipped"; // Mark the tile so that we know it's been clicked
-    this.checkStatus(memoryImage);
+MemoryGame.prototype.checkImage = function(memoryA, imgNumber) {
+    memoryA.childNodes[0].src = "memory/pics/" + this.getPictureArray()[imgNumber] + ".png";
+    memoryA.className = "flipped"; // Mark the tile so that we know it's been clicked
+    this.checkStatus(memoryA);
 };
 
-MemoryGame.prototype.checkStatus = function(clickedImage) {
-    var memoryImage1, memoryImage2, i, flippedImages;
+MemoryGame.prototype.checkStatus = function(clickedImageA) {
+    var memoryA1, memoryA2, i, flippedImages;
     flippedImages = this.root.querySelectorAll(".flipped");
     if(flippedImages.length == 2) {
         this.setTries(this.getTries() + 1);
-        memoryImage1 = flippedImages[0];
-        memoryImage2 = flippedImages[1];
-        if(memoryImage1.src !== memoryImage2.src) {
-            this.startWrongTiles(memoryImage1, memoryImage2);
+        memoryA1 = flippedImages[0];
+        memoryA2 = flippedImages[1];
+        if(memoryA1.childNodes[0].src !== memoryA2.childNodes[0].src) {
+            this.startWrongTiles(memoryA1, memoryA2);
         } else {
             /* Mark the correct tiles so they can't be clicked again */
-            memoryImage1.className = "complete";
-            memoryImage2.className = "complete";
+            memoryA1.className = "complete";
+            memoryA2.className = "complete";
             if(this.root.querySelectorAll(".complete").length === this.getPictureArray().length) {
                 this.gameEnd();
             }
@@ -167,7 +169,7 @@ MemoryGame.prototype.checkStatus = function(clickedImage) {
         
         /* Find the tiles that isn't the tile the player just clicked on */
         for(i = 0; i < flippedImages.length; i+=1) {
-            if(flippedImages[i] !== clickedImage){
+            if(flippedImages[i] !== clickedImageA){
                 wrongTiles.push(flippedImages[i]); 
             }
         }
