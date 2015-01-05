@@ -19,7 +19,7 @@ function QuizGame(elementID, firstURL) {
 }
 
 QuizGame.prototype.createApp = function() {
-    var appBody, header, appName, questionHolder, questionP, answerInput, submitButton;
+    var appBody, header, appName, questionHolder, questionP, statusHolder, statusP, answerInput, submitButton;
     var that = this;
     
     /* Section */
@@ -40,6 +40,13 @@ QuizGame.prototype.createApp = function() {
     questionP.className = "question";
     questionHolder.appendChild(questionP);
     appBody.appendChild(questionHolder);
+    
+    /* Status holder */
+    statusHolder = document.createElement("div");
+    statusP = document.createElement("p");
+    statusP.className = "status";
+    statusHolder.appendChild(statusP);
+    appBody.appendChild(statusHolder);
     
     /* Input field */
     answerInput = document.createElement("input");
@@ -67,7 +74,15 @@ QuizGame.prototype.sendAnswer = function(answer) {
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4) {
             if(xhr.status === 200) {
-                console.log(xhr.responseText);
+                JSONData = JSON.parse(xhr.responseText);
+                if(JSONData.nextURL !== undefined) {
+                    that.setNextURL(JSONData.nextURL);
+                    that.recieveQuestion();
+                } else {
+                    that.quizFinished();
+                }
+            } else if (xhr.status === 400) {
+                that.root.querySelector(".status").innerHTML = "Fel svar! Försök igen!";
             } else {
                 console.log("Läsfel. Status: " + xhr.status);
             }
@@ -75,7 +90,7 @@ QuizGame.prototype.sendAnswer = function(answer) {
     };
     xhr.open("POST", this.getNextURL(), true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify(answer));
+    xhr.send(JSON.stringify({"answer":answer}));
 };
 
 QuizGame.prototype.recieveQuestion = function() {
@@ -96,4 +111,8 @@ QuizGame.prototype.recieveQuestion = function() {
     };
     xhr.open("GET", this.getNextURL(), true);
     xhr.send(null);
+};
+
+QuizGame.prototype.quizFinished = function() {
+    
 };
