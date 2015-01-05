@@ -10,7 +10,7 @@ function QuizGame(elementID) {
 }
 
 QuizGame.prototype.createApp = function() {
-    var appBody, header, appVersion, select, option, x, y, i, button, col, row, rowDiv, memoryA, memoryImage;
+    var appBody, header, appName;
     var that = this;
     
     /* Section */
@@ -20,9 +20,9 @@ QuizGame.prototype.createApp = function() {
     
     /* Header */
     header = document.createElement("header");
-    appVersion = document.createElement("p");
-    appVersion.innerHTML = "QUIZ GAME";
-    header.appendChild(appVersion);
+    appName = document.createElement("p");
+    appName.innerHTML = "QUIZ GAME";
+    header.appendChild(appName);
     appBody.appendChild(header);
     
 };
