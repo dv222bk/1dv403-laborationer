@@ -16,6 +16,7 @@ ImageViewer.prototype.createApp = function() {
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4) {
             if(xhr.status === 200) {
+                that.root.parentNode.querySelector(".windowStatus").innerHTML = "";
                 /* JSONData */
                 JSONData = JSON.parse(xhr.responseText); 
                 
@@ -50,6 +51,8 @@ ImageViewer.prototype.createApp = function() {
             } else {
                 console.log("Läsfel. Status: " + xhr.status);
             }
+        } else {
+            that.root.parentNode.querySelector(".windowStatus").innerHTML = '<p><img src="desktop/pics/ajax-loader.gif" /> Loading...</p>';
         }
     };
     xhr.open("GET", "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/", true);

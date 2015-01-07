@@ -52,12 +52,14 @@ DesktopWindow.prototype.createWindow = function() {
     windowBody = document.createElement("div");
     windowBody.className = "windowBody";
     this.windowHolder.appendChild(windowBody);
-    this.createApp(windowBody);
     
     /* Status Field */
     statusField = document.createElement("div");
     statusField.className = "windowStatus";
     this.windowHolder.appendChild(statusField);
+    
+    /* Create App */
+    this.createApp(windowBody);
 };
 
 DesktopWindow.prototype.closeWindow = function() {

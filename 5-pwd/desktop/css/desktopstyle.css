@@ -115,15 +115,23 @@ table {
 .desktopApp .windowHeader button {
     width: 4em;
     margin: 0.4em;
-    background-color: #000000;
+    font-weight: bolder;
+    background-color: #772118;
     border: 0.1em solid #666666;
     border-radius: 0.2em;
     color: #FFFFFF;
     float: right;
+}
+.desktopApp .windowHeader button:hover {
+    background-color: #E6473D;
 }
 .desktopApp .windowBody {
     width: 100%;
     height: 21em;
     background-color: #FFFFFF;
     overflow: auto;
+}
+.desktopApp .windowStatus {
+    color: white;
+    padding: 0.5em 1em 0 0.5em;
 }
