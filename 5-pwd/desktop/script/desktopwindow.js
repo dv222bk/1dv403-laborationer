@@ -50,12 +50,12 @@ DesktopWindow.prototype.createWindow = function() {
     
     /* Window Body */
     windowBody = document.createElement("div");
-    windowBody.className = "appHolder";
+    windowBody.className = "windowBody";
     windowHolder.appendChild(windowBody);
     
     /* Status Field */
     statusField = document.createElement("div");
-    statusField.className = "statusField";
+    statusField.className = "windowStatus";
     windowHolder.appendChild(statusField);
 };
 
