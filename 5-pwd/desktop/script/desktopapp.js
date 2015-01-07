@@ -2,15 +2,24 @@
 
 function DesktopApp(elementID) {
     
-    
     /* root element */
     this.root = document.getElementById(elementID);
+    
+    /* app holder */
+    this.apps = 
+    [
+        {
+            "name": "ImageViewer",
+            "iconURL": "desktop/pics/appIcons/imageViewer.png"
+        }
+    ];
     
     this.createApp();
 }
 
 DesktopApp.prototype.createApp = function() {
-    var appbody, toolbar, appLink, imageViewerApp;
+    var appbody, toolbar, appLink, app, i;
+    var that = this;
     
     /* AppBody */
     appbody = document.createElement("section");
@@ -22,17 +31,21 @@ DesktopApp.prototype.createApp = function() {
     toolbar.className = "desktopToolbar";
     appbody.appendChild(toolbar);
     
-    /* Image Viewer App */
-    appLink = document.createElement("a");
-    imageViewerApp = document.createElement("img");
-    imageViewerApp.alt = "Klicka för att starta ImageViewer appen";
-    imageViewerApp.title = "ImageViewer";
-    imageViewerApp.src = "desktop/pics/appIcons/imageViewer.png";
-    imageViewerApp.className = "appIcon";
-    appLink.appendChild(imageViewerApp);
-    toolbar.appendChild(appLink);
+    /* Apps */
+    for(i = 0; i < this.apps.length; i += 1) {
+        appLink = document.createElement("a");
+        appLink.app = i;
+        appLink.onclick = function(e) {
+            e.preventDefault();
+            new DesktopWindow(this.app, that);
+            return false;
+        };
+        app = document.createElement("img");
+        app.alt = "Klicka för att starta " + this.apps[i].name + " appen";
+        app.title = this.apps[i].name;
+        app.src = this.apps[i].iconURL;
+        app.className = "appIcon";
+        appLink.appendChild(app);
+        toolbar.appendChild(appLink);
+    }
 };
-
-DesktopApp.prototype.createWindow = function() {
-    
-}
