@@ -51,12 +51,13 @@ table {
 }
 
 /*     START OF CSS CHANGES     */
-#desktop { 
+.desktopApp { 
     position: absolute;
     top: 0;
     bottom: 0;
     height: 100%;
     width: 100%;
+    overflow: hidden;
     background: url(../pics/background.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -64,11 +65,20 @@ table {
     background-size: cover;
 }
 
-.desktopToolbar {
+.desktopApp .desktopToolbar {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 3em;
+    height: 2.5em;
+    padding: 0.5em 0em 0em 0.5em;
     opacity: 0.6;
     background-color: #000000;
+}
+.desktopApp .appIcon {
+    width: 2em;
+}
+
+.desktopApp .appIcon:hover {
+    transition: 0.1s;
+    transform: scale(1.2);
 }
