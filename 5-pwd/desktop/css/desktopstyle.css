@@ -77,19 +77,28 @@ table {
 .desktopApp .appIcon {
     height: 2em;
     width: 2em;
+    transition: 0.1s ease;
 }
 .desktopApp .appIcon:hover {
-    transition: 0.1s;
     transform: scale(1.2);
 }
 .desktopApp .windowHolder {
     width: 20em;
     height: 25em;
+    overflow: hidden;
 }
 .desktopApp .windowHeader, .desktopApp .windowStatus {
     width: 100%;
     height: 2em;
     background-color: #111111;
+}
+.desktopApp .windowHeader {
+    border-top-left-radius: 0.3em;
+    border-top-right-radius: 0.3em;
+}
+.desktopApp .windowStatus {
+    border-bottom-left-radius: 0.3em;
+    border-bottom-right-radius: 0.3em;
 }
 .desktopApp .windowHeader p {
     font: bold 0.8em Arial, Helvetica, sans-serif;
@@ -116,4 +125,5 @@ table {
     width: 100%;
     height: 21em;
     background-color: #FFFFFF;
+    overflow: auto;
 }

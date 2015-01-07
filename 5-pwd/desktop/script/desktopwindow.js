@@ -52,6 +52,7 @@ DesktopWindow.prototype.createWindow = function() {
     windowBody = document.createElement("div");
     windowBody.className = "windowBody";
     this.windowHolder.appendChild(windowBody);
+    this.createApp(windowBody);
     
     /* Status Field */
     statusField = document.createElement("div");
@@ -61,4 +62,22 @@ DesktopWindow.prototype.createWindow = function() {
 
 DesktopWindow.prototype.closeWindow = function() {
     this.windowHolder.remove();
+};
+
+DesktopWindow.prototype.createApp = function(windowBody) {
+    switch(this.app) {
+        case 0:
+            new ImageViewer(windowBody);
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+    }
 };
