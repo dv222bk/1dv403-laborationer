@@ -8,22 +8,22 @@ function DesktopWindow(app, desktop) {
     /* Dekstop */
     this.desktop = desktop;
     
+    /* WindowHolder */
+    this.windowHolder = document.createElement("div");
+    this.windowHolder.className = "windowHolder";
+    this.desktop.root.querySelector("section").appendChild(this.windowHolder);
+    
     this.createWindow();
 }
 
 DesktopWindow.prototype.createWindow = function() {
-    var windowHolder, windowHeader, appIcon, appName, closeButton, windowBody, statusField;
+    var windowHeader, appIcon, appName, closeButton, windowBody, statusField;
     var that = this;
-    
-    /* WindowBody */
-    windowHolder = document.createElement("div");
-    windowHolder.className = "windowHolder";
-    this.desktop.root.querySelector("section").appendChild(windowHolder);
     
     /* WindowHeader */
     windowHeader = document.createElement("div");
     windowHeader.className = "windowHeader";
-    windowHolder.appendChild(windowHeader);
+    this.windowHolder.appendChild(windowHeader);
     
     /* App Icon */
     appIcon = document.createElement("img");
@@ -51,14 +51,14 @@ DesktopWindow.prototype.createWindow = function() {
     /* Window Body */
     windowBody = document.createElement("div");
     windowBody.className = "windowBody";
-    windowHolder.appendChild(windowBody);
+    this.windowHolder.appendChild(windowBody);
     
     /* Status Field */
     statusField = document.createElement("div");
     statusField.className = "windowStatus";
-    windowHolder.appendChild(statusField);
+    this.windowHolder.appendChild(statusField);
 };
 
 DesktopWindow.prototype.closeWindow = function() {
-    
+    this.windowHolder.remove();
 };
