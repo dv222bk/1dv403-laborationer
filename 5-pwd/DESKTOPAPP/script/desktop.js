@@ -4,7 +4,7 @@ var DESKTOPAPP = DESKTOPAPP || {};
 
 DESKTOPAPP.Desktop = function(elementID) {
     var openWindows, lastWindowX, lastWindowY, zIndex;
-    
+
     /* root element */
     this.root = document.getElementById(elementID);
     
@@ -33,6 +33,8 @@ DESKTOPAPP.Desktop = function(elementID) {
     };
     this.addWindow = function(windowBody) {
         openWindows.push(windowBody);
+        windowBody.style.zIndex = zIndex;
+        this.increaseZIndex();
     };
     this.setLastWindowX = function(xCord) {
         lastWindowX = xCord;
@@ -112,5 +114,12 @@ DESKTOPAPP.Desktop.prototype.removeWindow = function(windowBody) {
     var index = this.getWindows().indexOf(windowBody);
     if (index > -1) {
         this.getWindows().splice(index, 1);
+    }
+};
+
+DESKTOPAPP.Desktop.prototype.makeWindowLast = function(windowBody) {
+    if(this.getWindows().indexOf(windowBody) !== (this.getWindows().length - 1)) {
+        this.removeWindow(windowBody);
+        this.addWindow(windowBody);
     }
 };

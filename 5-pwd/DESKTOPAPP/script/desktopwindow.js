@@ -15,17 +15,19 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     
     this.desktop = desktop;
     
-    desktop.updateLastWindowCords();
-    
     /* Window Holder */
     this.windowHolder = document.createElement("div");
     this.windowHolder.className = "windowHolder";
+    desktop.updateLastWindowCords();
     this.windowHolder.style.top = (desktop.getLastWindowY() + 20) + 'px';
     this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + 'px';
     this.windowHolder.style.zIndex = desktop.getZIndex();
+    this.windowHolder.addEventListener("click", function() {
+        desktop.makeWindowLast(this);
+        return false;
+    });
     desktop.root.querySelector("section").appendChild(this.windowHolder);
     desktop.addWindow(this.windowHolder);
-    desktop.increaseZIndex();
     
     /* WindowHeader */
     windowHeader = document.createElement("div");
