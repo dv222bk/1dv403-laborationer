@@ -4,21 +4,25 @@ var DESKTOPAPP = DESKTOPAPP || {};
 
 DESKTOPAPP.DesktopWindow = function() {
     
-    /* WindowHolder */
-    this.windowHolder = document.createElement("div");
-    
-    /* Window Body */
-    this.windowBody = document.createElement("div");
+    this.windowBody;
+    this.windowHolder;
+
 };
 
 DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
-    var windowHeader, appIcon, appName, closeButton, statusField;
+    var windowHeader, appIcon, appName, closeButton, statusField, windowHolder, windowBody;
     var that = this;
+    
+    /* Window Holder */
+    windowHolder = document.createElement("div");
+    windowHolder.className = "windowHolder";
+    desktop.root.querySelector("section").appendChild(windowHolder);
+    this.windowHolder = windowHolder;
     
     /* WindowHeader */
     windowHeader = document.createElement("div");
     windowHeader.className = "windowHeader";
-    this.windowHolder.appendChild(windowHeader);
+    windowHolder.appendChild(windowHeader);
     
     /* App Icon */
     appIcon = document.createElement("img");
@@ -43,16 +47,16 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     };
     windowHeader.appendChild(closeButton);
     
-    /* WindowHolder and WindowBody */
-    this.windowHolder.className = "windowHolder";
-    this.windowBody.className = "windowBody";
-    this.desktop.root.querySelector("section").appendChild(this.windowHolder);
-    this.windowHolder.appendChild(this.windowBody);
+    /* WindowBody */
+    windowBody = document.createElement("div");
+    windowBody.className = "windowBody";
+    windowHolder.appendChild(windowBody);
+    this.windowBody = windowBody;
     
     /* Status Field */
     statusField = document.createElement("div");
     statusField.className = "windowStatus";
-    this.windowHolder.appendChild(statusField);
+    windowHolder.appendChild(statusField);
 };
 
 DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
