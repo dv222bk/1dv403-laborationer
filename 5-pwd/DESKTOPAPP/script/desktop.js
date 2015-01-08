@@ -35,6 +35,7 @@ DESKTOPAPP.Desktop = function(elementID) {
         openWindows.push(windowBody);
         windowBody.style.zIndex = zIndex;
         this.increaseZIndex();
+        console.log(openWindows);
     };
     this.setLastWindowX = function(xCord) {
         lastWindowX = xCord;

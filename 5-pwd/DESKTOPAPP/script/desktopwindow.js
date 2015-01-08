@@ -22,10 +22,11 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     this.windowHolder.style.top = (desktop.getLastWindowY() + 20) + 'px';
     this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + 'px';
     this.windowHolder.style.zIndex = desktop.getZIndex();
-    this.windowHolder.addEventListener("click", function() {
+    this.windowHolder.onmousedown = function(e) {
+        e.preventDefault();
         desktop.makeWindowLast(this);
         return false;
-    });
+    };
     desktop.root.querySelector("section").appendChild(this.windowHolder);
     desktop.addWindow(this.windowHolder);
     
