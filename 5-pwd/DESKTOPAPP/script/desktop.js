@@ -1,6 +1,8 @@
 "use strict";
 
-function DesktopApp(elementID) {
+var DESKTOPAPP = DESKTOPAPP || {};
+
+DESKTOPAPP.Desktop = function(elementID) {
     
     /* root element */
     this.root = document.getElementById(elementID);
@@ -10,14 +12,14 @@ function DesktopApp(elementID) {
     [
         {
             "name": "ImageViewer",
-            "iconURL": "desktopapp/pics/appIcons/imageViewer.png"
+            "iconURL": "DESKTOPAPP/pics/appIcons/imageViewer.png",
+            "appURL": DESKTOPAPP.apps.ImageViewer
         }
     ];
-    
     this.createApp();
-}
+};
 
-DesktopApp.prototype.createApp = function() {
+DESKTOPAPP.Desktop.prototype.createApp = function() {
     var appbody, toolbar, appLink, app, i;
     var that = this;
     
@@ -37,7 +39,7 @@ DesktopApp.prototype.createApp = function() {
         appLink.app = i;
         appLink.onclick = function(e) {
             e.preventDefault();
-            new DesktopWindow(this.app, that);
+            new that.apps[this.app].appURL(this.app, that);
             return false;
         };
         app = document.createElement("img");

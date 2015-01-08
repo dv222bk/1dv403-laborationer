@@ -1,14 +1,21 @@
 "use strict";
 
-function ImageViewer(element) {
-    
-    /* root element */
-    this.root = element;
-    
-    this.createApp();
-}
+var DESKTOPAPP = DESKTOPAPP || {};
+DESKTOPAPP.apps = DESKTOPAPP.apps || {};
 
-ImageViewer.prototype.createApp = function() {
+DESKTOPAPP.apps.ImageViewer = function(app, desktop) {
+    
+    DESKTOPAPP.DesktopWindow.call(app);
+    
+    this.app = app;
+    this.desktop = desktop;
+    this.createWindow(this.desktop);
+    this.createApp();
+};
+
+DESKTOPAPP.apps.ImageViewer.prototype = new DESKTOPAPP.DesktopWindow();
+
+DESKTOPAPP.apps.ImageViewer.prototype.createApp = function() {
     var xhr, JSONData, appBody, i, imgHolder, thumbnail, hiThumbHeight = 0, hiThumbWidth = 0;
     var that = this;
     xhr = new XMLHttpRequest();
@@ -16,14 +23,14 @@ ImageViewer.prototype.createApp = function() {
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4) {
             if(xhr.status === 200) {
-                that.root.parentNode.querySelector(".windowStatus").innerHTML = "";
+                that.windowBody.parentNode.querySelector(".windowStatus").innerHTML = "";
                 /* JSONData */
                 JSONData = JSON.parse(xhr.responseText); 
                 
                 /* App Body */
                 appBody = document.createElement("div");
                 appBody.className = "imageViewerApp";
-                that.root.appendChild(appBody);
+                that.windowBody.appendChild(appBody);
                 
                 /* Highest ThumbHeight and ThumbWidth */
                 for(i = 0; i < JSONData.length; i += 1) {
@@ -52,7 +59,7 @@ ImageViewer.prototype.createApp = function() {
                 console.log("Läsfel. Status: " + xhr.status);
             }
         } else {
-            that.root.parentNode.querySelector(".windowStatus").innerHTML = '<p><img src="desktopapp/pics/ajax-loader.gif" /> Loading...</p>';
+            that.windowBody.parentNode.querySelector(".windowStatus").innerHTML = '<p><img src="desktopapp/pics/ajax-loader.gif" /> Loading...</p>';
         }
     };
     xhr.open("GET", "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/", true);

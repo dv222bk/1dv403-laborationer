@@ -1,5 +1,5 @@
 "use strict";
 
 window.onload = function() {
-    new DesktopApp("desktop");
+    new DESKTOPAPP.Desktop("desktop");
 };
