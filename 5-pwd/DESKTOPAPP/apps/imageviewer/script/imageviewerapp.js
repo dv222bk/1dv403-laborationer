@@ -89,7 +89,7 @@ DESKTOPAPP.apps.ImageViewer.ImageWindow = function(app, desktop, imgHeight, imgW
     this.imgWidth = imgWidth;
     this.imgURL = imgURL;
     
-    this.createWindow(this.desktop, this.imgHeight, this.imgWidth);
+    this.createWindow(this.desktop, this.imgWidth, this.imgHeight);
     this.createImageWindow();
 };
 

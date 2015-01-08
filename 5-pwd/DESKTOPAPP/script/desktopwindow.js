@@ -9,7 +9,7 @@ DESKTOPAPP.DesktopWindow = function() {
     this.desktop;
 };
 
-DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, height, width) {
+DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, height) {
     var windowHeader, appIcon, appName, closeButton;
     var that = this;
     
@@ -23,9 +23,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, height, widt
     this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + "px";
     this.windowHolder.style.zIndex = desktop.getZIndex();
     this.windowHolder.onmousedown = function(e) {
-        e.preventDefault();
         desktop.makeWindowLast(this);
-        return false;
     };
     desktop.root.querySelector("section").appendChild(this.windowHolder);
     desktop.addWindow(this.windowHolder);

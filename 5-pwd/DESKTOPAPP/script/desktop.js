@@ -20,6 +20,11 @@ DESKTOPAPP.Desktop = function(elementID) {
             "name": "RSSReader",
             "iconURL": "DESKTOPAPP/pics/appIcons/RSSReader.png",
             "appURL": DESKTOPAPP.apps.RSSReader
+        },
+        {
+            "name": "Memory",
+            "iconURL": "DESKTOPAPP/pics/appIcons/memory.png",
+            "appURL": DESKTOPAPP.apps.Memory
         }
     ];
     
