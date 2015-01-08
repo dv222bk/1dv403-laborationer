@@ -6,23 +6,23 @@ DESKTOPAPP.DesktopWindow = function() {
     
     this.windowBody;
     this.windowHolder;
+    this.statusField;
 
 };
 
 DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
-    var windowHeader, appIcon, appName, closeButton, statusField, windowHolder, windowBody;
+    var windowHeader, appIcon, appName, closeButton;
     var that = this;
     
     /* Window Holder */
-    windowHolder = document.createElement("div");
-    windowHolder.className = "windowHolder";
-    desktop.root.querySelector("section").appendChild(windowHolder);
-    this.windowHolder = windowHolder;
+    this.windowHolder = document.createElement("div");
+    this.windowHolder.className = "windowHolder";
+    desktop.root.querySelector("section").appendChild(this.windowHolder);
     
     /* WindowHeader */
     windowHeader = document.createElement("div");
     windowHeader.className = "windowHeader";
-    windowHolder.appendChild(windowHeader);
+    this.windowHolder.appendChild(windowHeader);
     
     /* App Icon */
     appIcon = document.createElement("img");
@@ -48,17 +48,24 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     windowHeader.appendChild(closeButton);
     
     /* WindowBody */
-    windowBody = document.createElement("div");
-    windowBody.className = "windowBody";
-    windowHolder.appendChild(windowBody);
-    this.windowBody = windowBody;
+    this.windowBody = document.createElement("div");
+    this.windowBody.className = "windowBody";
+    this.windowHolder.appendChild(this.windowBody);
     
     /* Status Field */
-    statusField = document.createElement("div");
-    statusField.className = "windowStatus";
-    windowHolder.appendChild(statusField);
+    this.statusField = document.createElement("div");
+    this.statusField.className = "windowStatus";
+    this.windowHolder.appendChild(this.statusField);
 };
 
 DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
     this.windowHolder.remove();
+};
+
+DESKTOPAPP.DesktopWindow.prototype.showLoading = function() {
+    this.statusField.innerHTML = '<p><img src="DESKTOPAPP/pics/ajax-loader.gif" /> Loading...</p>';
+};
+
+DESKTOPAPP.DesktopWindow.prototype.removeStatus = function() {
+    this.statusField.innerHTML = "";
 };

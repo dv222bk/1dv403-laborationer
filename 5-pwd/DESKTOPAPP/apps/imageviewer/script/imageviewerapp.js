@@ -23,7 +23,7 @@ DESKTOPAPP.apps.ImageViewer.prototype.createApp = function() {
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4) {
             if(xhr.status === 200) {
-                that.windowBody.parentNode.querySelector(".windowStatus").innerHTML = "";
+                that.removeStatus();
                 /* JSONData */
                 JSONData = JSON.parse(xhr.responseText); 
                 
@@ -59,7 +59,7 @@ DESKTOPAPP.apps.ImageViewer.prototype.createApp = function() {
                 console.log("Läsfel. Status: " + xhr.status);
             }
         } else {
-            that.windowBody.parentNode.querySelector(".windowStatus").innerHTML = '<p><img src="DESKTOPAPP/pics/ajax-loader.gif" /> Loading...</p>';
+            that.showLoading();
         }
     };
     xhr.open("GET", "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/", true);
