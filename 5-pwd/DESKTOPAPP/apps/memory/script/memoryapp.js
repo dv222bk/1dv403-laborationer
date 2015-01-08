@@ -86,7 +86,7 @@ DESKTOPAPP.apps.Memory.prototype.wrongTiles = function(memoryA1, memoryA2) {
 };
 
 DESKTOPAPP.apps.Memory.prototype.createApp = function() {
-    var appBody, header, appName, select, option, x, y, i, button, col, row, rowDiv, memoryA, memoryImage;
+    var appBody, select, option, x, y, i, button, col, row, rowDiv, memoryA, memoryImage;
     var that = this;
     
     /* Section */
@@ -94,14 +94,6 @@ DESKTOPAPP.apps.Memory.prototype.createApp = function() {
     appBody.className = "MemoryGame";
     this.windowBody.appendChild(appBody);
     
-    /* Header */
-    header = document.createElement("header");
-    appName = document.createElement("p");
-    appName.innerHTML = "MEMORY GAME";
-    header.appendChild(appName);
-    appBody.appendChild(header);
-    
-
     /* Create new game 
     select = document.createElement("select");
     select.className = "memoryGameDimensions";

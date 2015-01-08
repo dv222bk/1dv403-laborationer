@@ -99,10 +99,6 @@ table {
     width: 3em;
     margin: 0.15em;
 }
-.MemoryGame header {
-    float: left;
-    margin-left: 2.5em;
-}
 .MemoryGame p {
     float: left;
 }
