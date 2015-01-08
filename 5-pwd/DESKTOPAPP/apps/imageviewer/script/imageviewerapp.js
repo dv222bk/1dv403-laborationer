@@ -51,6 +51,14 @@ DESKTOPAPP.apps.ImageViewer.prototype.createApp = function() {
                     imgHolder = document.createElement("a");
                     imgHolder.style.width = hiThumbWidth + "px";
                     imgHolder.style.height = hiThumbHeight + "px";
+                    imgHolder.orgHeight = JSONData[i].height;
+                    imgHolder.orgWidth = JSONData[i].width;
+                    imgHolder.orgURL = JSONData[i].URL;
+                    imgHolder.onclick = function(e) {
+                        e.preventDefault();
+                        new DESKTOPAPP.apps.ImageViewer.ImageWindow(that.app, that.desktop, this.orgHeight, this.orgWidth, this.orgURL);
+                        return false;
+                    };
                     appBody.appendChild(imgHolder);
                     
                     thumbnail = document.createElement("img");
@@ -68,4 +76,30 @@ DESKTOPAPP.apps.ImageViewer.prototype.createApp = function() {
     };
     xhr.open("GET", "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/", true);
     xhr.send(null);
+};
+
+DESKTOPAPP.apps.ImageViewer.ImageWindow = function(app, desktop, imgHeight, imgWidth, imgURL) {
+    
+    /* Inherit from DesktopWindow */
+    DESKTOPAPP.DesktopWindow.call(this);
+    
+    this.app = app;
+    this.desktop = desktop;
+    this.imgHeight = imgHeight;
+    this.imgWidth = imgWidth;
+    this.imgURL = imgURL;
+    
+    this.createWindow(this.desktop, this.imgHeight, this.imgWidth);
+    this.createImageWindow();
+};
+
+/* Inherit from DesktopWindow */
+DESKTOPAPP.apps.ImageViewer.ImageWindow.prototype = new DESKTOPAPP.DesktopWindow();
+
+DESKTOPAPP.apps.ImageViewer.ImageWindow.prototype.createImageWindow = function() {
+    var image = document.createElement("img");
+    image.alt = "En stor bild föreställande thumbnail bilden du klickade på";
+    image.title = "Stor version av bilden";
+    image.src = this.imgURL;
+    this.windowBody.appendChild(image);
 };

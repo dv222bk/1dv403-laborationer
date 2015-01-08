@@ -108,12 +108,14 @@ DESKTOPAPP.Desktop.prototype.getWindowCords = function(windowHolder) {
         yPosition += (windowHolder.offsetTop - windowHolder.scrollTop + windowHolder.clientTop);
         windowHolder = windowHolder.offsetParent;
     }
+    
     if(xPosition >= maxX) {
         xPosition = 0;
     }
     if(yPosition >= maxY) {
         yPosition = 0;
     }
+    
     return { x: xPosition, y: yPosition };
 };
 

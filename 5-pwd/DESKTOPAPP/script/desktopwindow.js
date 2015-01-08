@@ -9,7 +9,7 @@ DESKTOPAPP.DesktopWindow = function() {
     this.desktop;
 };
 
-DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
+DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, height, width) {
     var windowHeader, appIcon, appName, closeButton;
     var that = this;
     
@@ -19,8 +19,8 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     this.windowHolder = document.createElement("div");
     this.windowHolder.className = "windowHolder";
     desktop.updateLastWindowCords();
-    this.windowHolder.style.top = (desktop.getLastWindowY() + 20) + 'px';
-    this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + 'px';
+    this.windowHolder.style.top = (desktop.getLastWindowY() + 20) + "px";
+    this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + "px";
     this.windowHolder.style.zIndex = desktop.getZIndex();
     this.windowHolder.onmousedown = function(e) {
         e.preventDefault();
@@ -67,6 +67,14 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     this.statusField = document.createElement("div");
     this.statusField.className = "windowStatus";
     this.windowHolder.appendChild(this.statusField);
+    
+    if(height !== undefined) {
+        this.windowBody.style.maxHeight = height + "px";
+        this.windowBody.style.overflow = "hidden";
+    }
+    if(width !== undefined) {
+        this.windowHolder.style.width = width + "px";
+    }
 };
 
 DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
