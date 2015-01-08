@@ -10,7 +10,7 @@ function DesktopApp(elementID) {
     [
         {
             "name": "ImageViewer",
-            "iconURL": "desktop/pics/appIcons/imageViewer.png"
+            "iconURL": "desktopapp/pics/appIcons/imageViewer.png"
         }
     ];
     

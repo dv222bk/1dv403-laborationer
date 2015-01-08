@@ -52,7 +52,7 @@ ImageViewer.prototype.createApp = function() {
                 console.log("Läsfel. Status: " + xhr.status);
             }
         } else {
-            that.root.parentNode.querySelector(".windowStatus").innerHTML = '<p><img src="desktop/pics/ajax-loader.gif" /> Loading...</p>';
+            that.root.parentNode.querySelector(".windowStatus").innerHTML = '<p><img src="desktopapp/pics/ajax-loader.gif" /> Loading...</p>';
         }
     };
     xhr.open("GET", "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/", true);
