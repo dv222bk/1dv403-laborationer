@@ -12,10 +12,19 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     var windowHeader, appIcon, appName, closeButton;
     var that = this;
     
+    if(desktop.getLastWindow() !== null) {
+        desktop.updateLastWindowCords();
+    }
+    
     /* Window Holder */
     this.windowHolder = document.createElement("div");
     this.windowHolder.className = "windowHolder";
+    this.windowHolder.style.top = (desktop.getLastWindowY() + 20) + 'px';
+    this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + 'px';
+    this.windowHolder.style.zIndex = desktop.getZIndex();
     desktop.root.querySelector("section").appendChild(this.windowHolder);
+    desktop.setLastWindow(this.windowHolder);
+    desktop.increaseZIndex();
     
     /* WindowHeader */
     windowHeader = document.createElement("div");

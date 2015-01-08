@@ -84,6 +84,7 @@ table {
     transform: scale(1.2);
 }
 .desktopApp .windowHolder {
+    position: absolute;
     width: 20em;
     height: 25em;
     overflow: hidden;
