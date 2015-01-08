@@ -91,6 +91,7 @@ table {
     border-right: 0.2em solid black;
     border-radius: 1em;
     overflow: hidden;
+    box-shadow: 2px 2px 5px #000000;
 }
 .desktopApp .windowHeader, .desktopApp .windowStatus {
     width: 100%;

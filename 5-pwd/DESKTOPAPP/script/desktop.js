@@ -35,7 +35,6 @@ DESKTOPAPP.Desktop = function(elementID) {
         openWindows.push(windowBody);
         windowBody.style.zIndex = zIndex;
         this.increaseZIndex();
-        console.log(openWindows);
     };
     this.setLastWindowX = function(xCord) {
         lastWindowX = xCord;
@@ -94,12 +93,26 @@ DESKTOPAPP.Desktop.prototype.createApp = function() {
 
 /* http://www.kirupa.com/html5/get_element_position_using_javascript.htm */
 DESKTOPAPP.Desktop.prototype.getWindowCords = function(windowHolder) {
-    var xPosition = 0, yPosition = 0;
-  
+    var xPosition, yPosition, maxX, maxY;
+    
+    yPosition = 0;
+    xPosition = 0;
+    
+    if(windowHolder !== undefined) {
+        maxX = window.innerWidth - windowHolder.offsetWidth - 40;
+        maxY = window.innerHeight - windowHolder.offsetHeight - 70;
+    }
+    
     while(windowHolder) {
         xPosition += (windowHolder.offsetLeft - windowHolder.scrollLeft + windowHolder.clientLeft);
         yPosition += (windowHolder.offsetTop - windowHolder.scrollTop + windowHolder.clientTop);
         windowHolder = windowHolder.offsetParent;
+    }
+    if(xPosition >= maxX) {
+        xPosition = 0;
+    }
+    if(yPosition >= maxY) {
+        yPosition = 0;
     }
     return { x: xPosition, y: yPosition };
 };

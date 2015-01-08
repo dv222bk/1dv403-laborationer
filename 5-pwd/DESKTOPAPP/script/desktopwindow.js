@@ -71,7 +71,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
 
 DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
     this.desktop.removeWindow(this.windowHolder);
-    this.windowHolder.remove();
+    this.windowHolder.parentNode.removeChild(this.windowHolder);
 };
 
 DESKTOPAPP.DesktopWindow.prototype.showLoading = function() {
