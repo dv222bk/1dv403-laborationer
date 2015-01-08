@@ -5,7 +5,7 @@ DESKTOPAPP.apps = DESKTOPAPP.apps || {};
 
 DESKTOPAPP.apps.ImageViewer = function(app, desktop) {
     
-    DESKTOPAPP.DesktopWindow.call(app);
+    DESKTOPAPP.DesktopWindow.call(this);
     
     this.app = app;
     this.desktop = desktop;

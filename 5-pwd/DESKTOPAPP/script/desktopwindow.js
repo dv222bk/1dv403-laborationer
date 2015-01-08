@@ -3,11 +3,9 @@
 var DESKTOPAPP = DESKTOPAPP || {};
 
 DESKTOPAPP.DesktopWindow = function() {
-    
     this.windowBody;
     this.windowHolder;
     this.statusField;
-
 };
 
 DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {

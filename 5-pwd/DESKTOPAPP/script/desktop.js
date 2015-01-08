@@ -14,6 +14,11 @@ DESKTOPAPP.Desktop = function(elementID) {
             "name": "ImageViewer",
             "iconURL": "DESKTOPAPP/pics/appIcons/imageViewer.png",
             "appURL": DESKTOPAPP.apps.ImageViewer
+        },
+        {
+            "name": "RSSReader",
+            "iconURL": "DESKTOPAPP/pics/appIcons/RSSReader.png",
+            "appURL": DESKTOPAPP.apps.RSSReader
         }
     ];
     this.createApp();
