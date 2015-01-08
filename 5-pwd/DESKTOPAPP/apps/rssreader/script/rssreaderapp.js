@@ -5,15 +5,21 @@ DESKTOPAPP.apps = DESKTOPAPP.apps || {};
 
 DESKTOPAPP.apps.RSSReader = function(app, desktop) {
     
+    /* Inherit from DesktopWindow */
     DESKTOPAPP.DesktopWindow.call(this);
     
-    this.RSSFeed = "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/";
+    /* RSSFeed */
+    this.RSSFeed;
+    this.changeRSSFeed("http://www.dn.se/m/rss/senaste-nytt");
+    
     this.app = app;
     this.desktop = desktop;
+    
     this.createWindow(this.desktop);
     this.createApp();
 };
 
+/* Inherit from DesktomWindow */
 DESKTOPAPP.apps.RSSReader.prototype = new DESKTOPAPP.DesktopWindow();
 
 DESKTOPAPP.apps.RSSReader.prototype.createApp = function() {
@@ -43,5 +49,9 @@ DESKTOPAPP.apps.RSSReader.prototype.createApp = function() {
 };
 
 DESKTOPAPP.apps.RSSReader.prototype.changeRSSFeed = function(feed) {
-    this.RSSFeed = feed;
+    if(feed) {
+        this.RSSFeed = "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=" + escape(feed);
+    } else {
+        this.RSSFeed = "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/";
+    }
 };

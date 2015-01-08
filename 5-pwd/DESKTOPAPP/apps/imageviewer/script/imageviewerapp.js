@@ -3,16 +3,20 @@
 var DESKTOPAPP = DESKTOPAPP || {};
 DESKTOPAPP.apps = DESKTOPAPP.apps || {};
 
+
 DESKTOPAPP.apps.ImageViewer = function(app, desktop) {
     
+    /* Inherit from DesktopWindow */
     DESKTOPAPP.DesktopWindow.call(this);
     
     this.app = app;
     this.desktop = desktop;
+    
     this.createWindow(this.desktop);
     this.createApp();
 };
 
+/* Inherit from DesktopWindow */
 DESKTOPAPP.apps.ImageViewer.prototype = new DESKTOPAPP.DesktopWindow();
 
 DESKTOPAPP.apps.ImageViewer.prototype.createApp = function() {
