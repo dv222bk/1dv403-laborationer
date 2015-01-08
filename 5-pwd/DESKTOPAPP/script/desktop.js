@@ -3,7 +3,7 @@
 var DESKTOPAPP = DESKTOPAPP || {};
 
 DESKTOPAPP.Desktop = function(elementID) {
-    var lastWindow, lastWindowX, lastWindowY, zIndex;
+    var openWindows, lastWindowX, lastWindowY, zIndex;
     
     /* root element */
     this.root = document.getElementById(elementID);
@@ -23,34 +23,34 @@ DESKTOPAPP.Desktop = function(elementID) {
         }
     ];
     
-    lastWindow = null;
+    openWindows = [];
     lastWindowX = 20;
     lastWindowY = 20;
     zIndex = 1;
     
-    this.getLastWindow = function() {
-        return this.lastWindow;
+    this.getWindows = function() {
+        return openWindows;
+    };
+    this.addWindow = function(windowBody) {
+        openWindows.push(windowBody);
+    };
+    this.setLastWindowX = function(xCord) {
+        lastWindowX = xCord;
     };
     this.getLastWindowX = function() {
-        return this.lastWindowX;
+        return lastWindowX;
+    };
+    this.setLastWindowY = function(yCord) {
+        lastWindowY = yCord;
     };
     this.getLastWindowY = function() {
-        return this.lastWindowY;
-    };
-    this.updateLastWindowCords = function() {
-        var cords;
-        cords = this.getWindowCords(this.lastWindow);
-        this.lastWindowX = cords.x;
-        this.lastWindowY = cords.y;
-    };
-    this.setLastWindow = function(windowBody) {
-        this.lastWindow = windowBody;
+        return lastWindowY;
     };
     this.getZIndex = function() {
-        return this.zIndex;
+        return zIndex;
     };
     this.increaseZIndex = function() {
-        this.zIndex += 1;
+        zIndex += 1;
     };
     
     this.createApp();
@@ -99,4 +99,18 @@ DESKTOPAPP.Desktop.prototype.getWindowCords = function(windowHolder) {
         windowHolder = windowHolder.offsetParent;
     }
     return { x: xPosition, y: yPosition };
+};
+
+DESKTOPAPP.Desktop.prototype.updateLastWindowCords = function() {
+    var cords;
+    cords = this.getWindowCords(this.getWindows()[this.getWindows().length - 1]);
+    this.setLastWindowX(cords.x);
+    this.setLastWindowY(cords.y);
+};
+
+DESKTOPAPP.Desktop.prototype.removeWindow = function(windowBody) {
+    var index = this.getWindows().indexOf(windowBody);
+    if (index > -1) {
+        this.getWindows().splice(index, 1);
+    }
 };

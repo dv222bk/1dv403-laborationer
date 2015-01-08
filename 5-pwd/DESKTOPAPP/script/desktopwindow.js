@@ -6,15 +6,16 @@ DESKTOPAPP.DesktopWindow = function() {
     this.windowBody;
     this.windowHolder;
     this.statusField;
+    this.desktop;
 };
 
 DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     var windowHeader, appIcon, appName, closeButton;
     var that = this;
     
-    if(desktop.getLastWindow() !== null) {
-        desktop.updateLastWindowCords();
-    }
+    this.desktop = desktop;
+    
+    desktop.updateLastWindowCords();
     
     /* Window Holder */
     this.windowHolder = document.createElement("div");
@@ -23,7 +24,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
     this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + 'px';
     this.windowHolder.style.zIndex = desktop.getZIndex();
     desktop.root.querySelector("section").appendChild(this.windowHolder);
-    desktop.setLastWindow(this.windowHolder);
+    desktop.addWindow(this.windowHolder);
     desktop.increaseZIndex();
     
     /* WindowHeader */
@@ -66,6 +67,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop) {
 };
 
 DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
+    this.desktop.removeWindow(this.windowHolder);
     this.windowHolder.remove();
 };
 
