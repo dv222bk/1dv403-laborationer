@@ -141,17 +141,20 @@ table {
 }
 .desktopApp .windowHeader .contextMenu {
     clear: both;
-    margin: 0 1em;
     position: relative;
-    width: auto;
-
+    width: 100%;
+    margin: 0 1em;
 }
 .desktopApp .windowHeader .contextMenu img {
     width: 2em;
     height: 2em;
     margin-top: 1em;
 }
-.desktopApp .windowHeader .contextMenu:hover {
+.desktopApp .windowHeader .contextMenu li {
+    display: inline-block;
+    margin: 0 1em;
+}
+.desktopApp .windowHeader .contextMenu li:hover {
     background-color: #333333;
 }
 .desktopApp .windowHeader .contextMenu ul {
@@ -163,9 +166,16 @@ table {
     list-style: none;
     background-color: #000000;
 }
+.desktopApp .windowHeader .contextMenu li ul li {
+    margin: 0;
+    float: left;
+    clear: both;
+    width: 100%;
+}
 .desktopApp .windowHeader .contextMenu li ul li a {
     display: block;
-    width: 12em;
+    width: 100%;
+    padding-right: 1em;
     line-height: 4em;
 }
 .desktopApp .windowHeader .contextMenu li ul li:hover {

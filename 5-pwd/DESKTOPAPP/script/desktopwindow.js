@@ -6,12 +6,13 @@ DESKTOPAPP.DesktopWindow = function() {
     this.windowBody;
     this.windowHolder;
     this.contextMenu;
+    this.contextMenuArkiv;
     this.statusField;
     this.desktop;
 };
 
 DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, height) {
-    var windowHeader, appIcon, appName, closeButton, contextMenuArkiv, contextMenuArkivMenu, contextMenuArkivMenuClose, contextMenuArkivMenuCloseA, contextMenuArkivMenuCloseImg;
+    var windowHeader, appIcon, appName, closeButton, contextMenuArkivMenu, contextMenuArkivMenuClose, contextMenuArkivMenuCloseA, contextMenuArkivMenuCloseImg;
     var that = this;
     
     this.desktop = desktop;
@@ -62,9 +63,9 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, heigh
     this.contextMenu.className = "contextMenu";
     windowHeader.appendChild(this.contextMenu);
     
-    contextMenuArkiv = document.createElement("li");
-    contextMenuArkiv.innerHTML = "Arkiv";
-    contextMenuArkiv.onclick = function(e) {
+    this.contextMenuArkiv = document.createElement("li");
+    this.contextMenuArkiv.innerHTML = "Arkiv";
+    this.contextMenuArkiv.onclick = function(e) {
         e.preventDefault();
             if(contextMenuArkivMenu.style.display === "none"){
                 contextMenuArkivMenu.style.display = "block";
@@ -75,7 +76,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, heigh
     };
     contextMenuArkivMenu = document.createElement("ul");
     contextMenuArkivMenu.style.display = "none";
-    contextMenuArkiv.appendChild(contextMenuArkivMenu);
+    this.contextMenuArkiv.appendChild(contextMenuArkivMenu);
 
     contextMenuArkivMenuClose = document.createElement("li");
     contextMenuArkivMenu.appendChild(contextMenuArkivMenuClose);
@@ -95,7 +96,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, heigh
     contextMenuArkivMenuCloseA.insertBefore(contextMenuArkivMenuCloseImg, contextMenuArkivMenuCloseA.childNodes[0]);
     contextMenuArkivMenuClose.appendChild(contextMenuArkivMenuCloseA);
     
-    this.contextMenu.appendChild(contextMenuArkiv);
+    this.contextMenu.appendChild(this.contextMenuArkiv);
 
     /* WindowBody */
     this.windowBody = document.createElement("div");
