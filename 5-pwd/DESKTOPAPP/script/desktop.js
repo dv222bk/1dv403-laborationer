@@ -3,7 +3,7 @@
 var DESKTOPAPP = DESKTOPAPP || {};
 
 DESKTOPAPP.Desktop = function(elementID) {
-    var openWindows, lastWindowX, lastWindowY, zIndex, i;
+    var openWindows, lastWindowX, lastWindowY, zIndex;
 
     /* root element */
     this.root = document.getElementById(elementID);
@@ -61,13 +61,16 @@ DESKTOPAPP.Desktop = function(elementID) {
         zIndex += 1;
     };
     
+    this.overlay;
+    
     /* Close window menu when clicking somewhere other than the menu */
     document.onclick = function(e) {
+        var menu, i, k;
         for(i = 0; i < openWindows.length; i += 1) {
-            var what = openWindows[i].querySelectorAll(".contextMenu ul");
-            for (var k = 0; k < what.length; k++) {
-                if(what[k].style.display !== "none" && what[k] !== e.target && what[k].parentNode !== e.target) {
-                    what[k].style.display = "none";
+            menu = openWindows[i].querySelectorAll(".contextMenu ul ");
+            for (k = 0; k < menu.length; k++) {
+                if(menu[k].style.display !== "none" && menu[k] !== e.target && menu[k].parentNode !== e.target) {
+                    menu[k].style.display = "none";
                 }
             }
         }
@@ -84,6 +87,18 @@ DESKTOPAPP.Desktop.prototype.createApp = function() {
     appbody = document.createElement("section");
     appbody.className = "desktopApp";
     this.root.appendChild(appbody);
+    
+    /* overlay */
+    this.overlay = document.createElement("div");
+    this.overlay.className = "overlay";
+    this.overlay.onclick = function(e) {
+        if(e.target === this) {
+            e.preventDefault();
+            that.toggleOverlay();
+            return false;
+        }
+    };
+    appbody.appendChild(this.overlay);
     
     /* Toolbar */
     toolbar = document.createElement("div");
@@ -156,4 +171,14 @@ DESKTOPAPP.Desktop.prototype.makeWindowLast = function(windowBody) {
         this.removeWindow(windowBody);
         this.addWindow(windowBody);
     }
+};
+
+DESKTOPAPP.Desktop.prototype.toggleOverlay = function() {
+    if(this.overlay.style.visibility === "visible") {
+        this.overlay.style.visibility = "hidden";
+        this.overlay.innerHTML = "";
+    } else {
+        this.overlay.style.visibility = "visible";
+    }
+    this.overlay.style.zIndex = this.getZIndex() + 1;
 };

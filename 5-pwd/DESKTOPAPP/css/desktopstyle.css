@@ -64,7 +64,49 @@ table {
     -o-background-size: cover;
     background-size: cover;
 }
-
+.desktopApp .overlay {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width: 100%;
+     height: 100%;
+     background-color: #000000;
+     background-color: rgba(0, 0, 0, 0.7);
+}
+.desktopApp .overlay .alertWindow {
+    width: auto;
+    padding: 3em;
+    background-color: #e1dcc7;
+    border: 0.3em solid #C7C2B0;
+    border-radius: 1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.desktopApp .overlay .alertWindow p {
+    float: left;
+    display: inline-block;
+}
+.desktopApp .overlay .alertWindow input[type=radio] {
+    float: left;
+    clear: left;
+    margin-bottom: 1em;
+    display: block;
+}
+.desktopApp .overlay .alertWindow input[type=text] {
+    float: left;
+    margin-bottom: 1em;
+    display: block;
+}
+.desktopApp .overlay .alertWindow button {
+    margin-left: 1em;
+    float: left;
+}
+.desktopApp .overlay .alertWindow select {
+    float: left;
+}
 .desktopApp .desktopToolbar {
     position: absolute;
     bottom: 0;
@@ -143,7 +185,7 @@ table {
     clear: both;
     position: relative;
     width: 100%;
-    margin: 0 1em;
+    margin: 0 0.5em;
 }
 .desktopApp .windowHeader .contextMenu img {
     width: 2em;
@@ -152,10 +194,7 @@ table {
 }
 .desktopApp .windowHeader .contextMenu li {
     display: inline-block;
-    margin: 0 1em;
-}
-.desktopApp .windowHeader .contextMenu li:hover {
-    background-color: #333333;
+    padding: 0 1em;
 }
 .desktopApp .windowHeader .contextMenu ul {
     display: none;
@@ -167,19 +206,18 @@ table {
     background-color: #000000;
 }
 .desktopApp .windowHeader .contextMenu li ul li {
-    margin: 0;
+    padding: 0;
     float: left;
     clear: both;
     width: 100%;
 }
 .desktopApp .windowHeader .contextMenu li ul li a {
     display: block;
-    width: 100%;
     padding-right: 1em;
     line-height: 4em;
 }
-.desktopApp .windowHeader .contextMenu li ul li:hover {
-    background-color: #333333;
+.desktopApp .windowHeader .contextMenu li:hover, .desktopApp .windowHeader .contextMenu li ul li:hover {
+    background-color: #555555;
 }
 .desktopApp .windowBody {
     width: 100%;

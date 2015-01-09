@@ -75,7 +75,7 @@ DESKTOPAPP.apps.Memory = function(app, desktop) {
     this.createApp();
 };
 
-/* Inherit from DesktomWindow */
+/* Inherit from DesktopWindow */
 DESKTOPAPP.apps.Memory.prototype = new DESKTOPAPP.DesktopWindow();
 
 DESKTOPAPP.apps.Memory.prototype.wrongTiles = function(memoryA1, memoryA2) {
