@@ -64,7 +64,7 @@ DESKTOPAPP.Desktop = function(elementID) {
     this.overlay;
     
     /* Close window menu when clicking somewhere other than the menu */
-    document.onclick = function(e) {
+    document.onmousedown = function(e) {
         var menu, i, k;
         for(i = 0; i < openWindows.length; i += 1) {
             menu = openWindows[i].querySelectorAll(".contextMenu ul ");
@@ -91,7 +91,7 @@ DESKTOPAPP.Desktop.prototype.createApp = function() {
     /* overlay */
     this.overlay = document.createElement("div");
     this.overlay.className = "overlay";
-    this.overlay.onclick = function(e) {
+    this.overlay.onmousedown = function(e) {
         if(e.target === this) {
             e.preventDefault();
             that.toggleOverlay();

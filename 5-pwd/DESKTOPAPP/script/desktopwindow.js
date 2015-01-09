@@ -65,7 +65,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, heigh
     
     this.contextMenuArkiv = document.createElement("li");
     this.contextMenuArkiv.innerHTML = "Arkiv";
-    this.contextMenuArkiv.onclick = function(e) {
+    this.contextMenuArkiv.onmousedown = function(e) {
         e.preventDefault();
             if(contextMenuArkivMenu.style.display === "none"){
                 contextMenuArkivMenu.style.display = "block";
@@ -88,7 +88,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, heigh
     
     contextMenuArkivMenuCloseA = document.createElement("a");
     contextMenuArkivMenuCloseA.innerHTML = "Stäng fönstret";
-    contextMenuArkivMenuCloseA.onclick = function(e) {
+    contextMenuArkivMenuCloseA.onmousedown = function(e) {
         e.preventDefault;
         that.closeWindow();
         return false;

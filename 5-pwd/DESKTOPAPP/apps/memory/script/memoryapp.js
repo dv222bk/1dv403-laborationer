@@ -232,7 +232,7 @@ DESKTOPAPP.apps.Memory.prototype.gameSettingsMenu = function() {
     submitButton = document.createElement("button");
     submitButton.type = "submit";
     submitButton.innerHTML = "Ändra";
-    submitButton.onclick = function(e) {
+    submitButton.onmousedown = function(e) {
         e.preventDefault();
         that.setCurrentDimensions(selectDimensions.value);
         that.newGame();
@@ -250,7 +250,7 @@ DESKTOPAPP.apps.Memory.prototype.createSettingsMenu = function() {
     
     contextMenuSettings = document.createElement("li");
     contextMenuSettings.innerHTML = "Inställningar";
-    contextMenuSettings.onclick = function(e) {
+    contextMenuSettings.onmousedown = function(e) {
         e.preventDefault();
             if(contextMenuSettingsMenu.style.display === "none"){
                 contextMenuSettingsMenu.style.display = "block";
@@ -274,7 +274,7 @@ DESKTOPAPP.apps.Memory.prototype.createSettingsMenu = function() {
     
     contextMenuSettingsMenuRestartGameA = document.createElement("a");
     contextMenuSettingsMenuRestartGameA.innerHTML = "Starta om";
-    contextMenuSettingsMenuRestartGameA.onclick = function(e) {
+    contextMenuSettingsMenuRestartGameA.onmousedown = function(e) {
         e.preventDefault;
         that.newGame();
         return false;
@@ -293,7 +293,7 @@ DESKTOPAPP.apps.Memory.prototype.createSettingsMenu = function() {
     
     contextMenuSettingsMenuGameSettingsA = document.createElement("a");
     contextMenuSettingsMenuGameSettingsA.innerHTML = "Inställningar...";
-    contextMenuSettingsMenuGameSettingsA.onclick = function(e) {
+    contextMenuSettingsMenuGameSettingsA.onmousedown = function(e) {
         e.preventDefault;
         that.gameSettingsMenu();
         return false;

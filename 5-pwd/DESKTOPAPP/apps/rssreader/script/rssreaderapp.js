@@ -117,7 +117,7 @@ DESKTOPAPP.apps.RSSReader.prototype.updateMenu = function() {
     submitButton = document.createElement("button");
     submitButton.type = "submit";
     submitButton.innerHTML = "Ändra";
-    submitButton.onclick = function(e) {
+    submitButton.onmousedown = function(e) {
         e.preventDefault();
         that.setAjaxInterval(intervalSelect.value);
         that.desktop.toggleOverlay();
@@ -172,7 +172,7 @@ DESKTOPAPP.apps.RSSReader.prototype.changeRSSMenu = function() {
     submitButton = document.createElement("button");
     submitButton.type = "submit";
     submitButton.innerHTML = "Ändra";
-    submitButton.onclick = function(e) {
+    submitButton.onmousedown = function(e) {
         var radioButton = alertWindow.querySelector('input[type=radio]:checked');
         e.preventDefault();
         if(radioButton.value === "user") {
@@ -195,7 +195,7 @@ DESKTOPAPP.apps.RSSReader.prototype.createSettingsMenu = function() {
     
     contextMenuSettings = document.createElement("li");
     contextMenuSettings.innerHTML = "Inställningar";
-    contextMenuSettings.onclick = function(e) {
+    contextMenuSettings.onmousedown = function(e) {
         e.preventDefault();
             if(contextMenuSettingsMenu.style.display === "none"){
                 contextMenuSettingsMenu.style.display = "block";
@@ -219,7 +219,7 @@ DESKTOPAPP.apps.RSSReader.prototype.createSettingsMenu = function() {
     
     contextMenuSettingsMenuUpdateIntervalA = document.createElement("a");
     contextMenuSettingsMenuUpdateIntervalA.innerHTML = "Uppdateringsintervall...";
-    contextMenuSettingsMenuUpdateIntervalA.onclick = function(e) {
+    contextMenuSettingsMenuUpdateIntervalA.onmousedown = function(e) {
         e.preventDefault;
         that.updateMenu();
         return false;
@@ -238,7 +238,7 @@ DESKTOPAPP.apps.RSSReader.prototype.createSettingsMenu = function() {
     
     contextMenuSettingsMenuRSSFeedA = document.createElement("a");
     contextMenuSettingsMenuRSSFeedA.innerHTML = "Välj RSS källa...";
-    contextMenuSettingsMenuRSSFeedA.onclick = function(e) {
+    contextMenuSettingsMenuRSSFeedA.onmousedown = function(e) {
         e.preventDefault;
         that.changeRSSMenu();
         return false;
@@ -257,7 +257,7 @@ DESKTOPAPP.apps.RSSReader.prototype.createSettingsMenu = function() {
     
     contextMenuSettingsMenuUpdateA = document.createElement("a");
     contextMenuSettingsMenuUpdateA.innerHTML = "Uppdatera fönstret";
-    contextMenuSettingsMenuUpdateA.onclick = function(e) {
+    contextMenuSettingsMenuUpdateA.onmousedown = function(e) {
         e.preventDefault;
         that.callAjax();
         return false;
