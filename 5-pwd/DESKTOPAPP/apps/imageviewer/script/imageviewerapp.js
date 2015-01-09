@@ -102,4 +102,5 @@ DESKTOPAPP.apps.ImageViewer.ImageWindow.prototype.createImageWindow = function()
     image.title = "Stor version av bilden";
     image.src = this.imgURL;
     this.windowBody.appendChild(image);
+    this.windowBody.style.height = "auto";
 };

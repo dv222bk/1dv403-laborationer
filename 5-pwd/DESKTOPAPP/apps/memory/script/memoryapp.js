@@ -152,6 +152,9 @@ DESKTOPAPP.apps.Memory.prototype.createApp = function() {
             rowDiv.appendChild(memoryA);
         }
     }
+    
+    /* Make it so that windowBody has the same height as the content */
+    this.windowBody.style.height = "auto";
 };
 
 DESKTOPAPP.apps.Memory.prototype.checkImage = function(memoryA, imgNumber) {
