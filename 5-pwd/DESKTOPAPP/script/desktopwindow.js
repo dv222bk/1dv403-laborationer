@@ -129,3 +129,8 @@ DESKTOPAPP.DesktopWindow.prototype.showLoading = function() {
 DESKTOPAPP.DesktopWindow.prototype.removeStatus = function() {
     this.statusField.innerHTML = "";
 };
+
+DESKTOPAPP.DesktopWindow.prototype.updateStatus = function() {
+    var currentTime = new Date();
+    this.statusField.innerHTML = "Senast Uppdaterad: " + currentTime.toTimeString();
+};

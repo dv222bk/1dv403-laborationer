@@ -66,7 +66,7 @@ DESKTOPAPP.apps.RSSReader.prototype.callAjax = function() {
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4) {
             /* Remove everything from the statusfield */
-            that.removeStatus();
+            that.updateStatus();
             
             that.appBody.innerHTML = "";
             if(xhr.status === 200) {

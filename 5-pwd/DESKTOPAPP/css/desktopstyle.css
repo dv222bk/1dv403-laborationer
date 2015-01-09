@@ -229,7 +229,8 @@ table {
     word-wrap: break-word;
 }
 .desktopApp .windowStatus {
-    color: white;
+    font: bold 0.7em Arial, Helvetica, sans-serif;
+    color: #CCCCCC;
     width: 97%;
     padding: 2% 2% 0 1%;
 }
