@@ -123,7 +123,15 @@ DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
 };
 
 DESKTOPAPP.DesktopWindow.prototype.showLoading = function() {
-    this.statusField.innerHTML = '<p><img src="DESKTOPAPP/pics/ajax-loader.gif" /> Loading...</p>';
+    var p, img;
+    p = document.createElement("p");
+    p.innerHTML = " Loading...";
+    img = document.createElement("img");
+    img.alt = "Laddnings icon";
+    img.title = "Laddar...";
+    img.src = "DESKTOPAPP/pics/ajax-loader.gif";
+    this.statusField.appendChild(p);
+    p.insertBefore(img, p.childNodes[0]);
 };
 
 DESKTOPAPP.DesktopWindow.prototype.removeStatus = function() {

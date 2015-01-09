@@ -4,7 +4,7 @@ var DESKTOPAPP = DESKTOPAPP || {};
 DESKTOPAPP.apps = DESKTOPAPP.apps || {};
 
 DESKTOPAPP.apps.Memory = function(app, desktop) {
-    var pictureArray, tries, complete, wrongTiles, rows, cols;
+    var pictureArray, tries, complete, currentDimensions, wrongTiles, rows, cols;
     var that = this;
     
     this.app = app;
@@ -19,6 +19,7 @@ DESKTOPAPP.apps.Memory = function(app, desktop) {
     pictureArray = RandomGenerator.getPictureArray(4, 4);
     tries = 0;
     complete = 0;
+    currentDimensions = "4x4";
     
     /* functions */
     this.getPictureArray = function() {
@@ -61,6 +62,18 @@ DESKTOPAPP.apps.Memory = function(app, desktop) {
         complete += 2;
     };
     
+    this.resetComplete = function() {
+        complete = 0;
+    };
+    
+    this.setCurrentDimensions = function(dimensions) {
+        currentDimensions = dimensions;
+    };
+    
+    this.getCurrentDimensions = function() {
+        return currentDimensions;
+    };
+    
     this.startWrongTiles = function(memoryA1, memoryA2) {
         wrongTiles = setTimeout(function() {
             that.wrongTiles(memoryA1, memoryA2);
@@ -72,6 +85,7 @@ DESKTOPAPP.apps.Memory = function(app, desktop) {
     };
 
     this.createWindow(this.desktop, 220);
+    this.createSettingsMenu();
     this.createApp();
 };
 
@@ -86,46 +100,13 @@ DESKTOPAPP.apps.Memory.prototype.wrongTiles = function(memoryA1, memoryA2) {
 };
 
 DESKTOPAPP.apps.Memory.prototype.createApp = function() {
-    var appBody, select, option, x, y, i, button, col, row, rowDiv, memoryA, memoryImage;
+    var appBody, col, row, rowDiv, memoryA, memoryImage;
     var that = this;
     
     /* Section */
     appBody = document.createElement("section");
     appBody.className = "MemoryGame";
     this.windowBody.appendChild(appBody);
-    
-    /* Create new game 
-    select = document.createElement("select");
-    select.className = "memoryGameDimensions";
-    x = 2;
-    y = 2;
-    for(i = 0; i < 4; i+=1) {
-        option = document.createElement("option");
-        option.value = x + "x" + y;
-        option.innerHTML = x + "x" + y;
-        select.appendChild(option);
-        if(x === y) {
-            x += 1;
-        } else if (x > y) {
-            y += 1;
-        }
-        if(x === 3 && y === 3) {
-            x += 1;
-        }
-    }
-    appBody.appendChild(select);
-    
-    button = document.createElement("button");
-    button.type = "submit";
-    button.innerHTML = "Starta nytt spel";
-    button.onclick = function(e) {
-        e.preventDefault();
-        that.newGame();
-        return false;
-    };
-    appBody.appendChild(button);
-    
-    */
     
     /* Memory images */
     for(row = 0; row < this.getRows(); row+=1) {
@@ -204,9 +185,8 @@ DESKTOPAPP.apps.Memory.prototype.gameEnd = function() {
 };
 
 DESKTOPAPP.apps.Memory.prototype.newGame = function() {
-    var selectElement, dimensions;
-    selectElement = this.windowBody.querySelector(".memoryGameDimensions");
-    dimensions = selectElement.options[selectElement.selectedIndex].value.split("x");
+    var dimensions;
+    dimensions = this.getCurrentDimensions().split("x");
     
     /* Remove the old gameboard and reset everything */
     this.windowBody.removeChild(this.windowBody.querySelector(".MemoryGame"));
@@ -214,7 +194,112 @@ DESKTOPAPP.apps.Memory.prototype.newGame = function() {
     this.setCols(dimensions[1]);
     this.setTries(0);
     this.setPictureArray();
+    this.resetComplete();
     
     /* Create a new gameboard */
     this.createApp();
+};
+
+DESKTOPAPP.apps.Memory.prototype.gameSettingsMenu = function() {
+    var alertWindow, selectDimensions, i, x, y, option, submitButton;
+    var that = this;
+    
+    this.desktop.toggleOverlay();
+    
+    alertWindow = document.createElement("div");
+    alertWindow.className = "alertWindow";
+    this.desktop.overlay.appendChild(alertWindow);
+    
+    selectDimensions = document.createElement("select");
+    alertWindow.appendChild(selectDimensions);
+    x = 2;
+    y = 2;
+    for(i = 0; i < 4; i+=1) {
+        option = document.createElement("option");
+        option.value = x + "x" + y;
+        option.innerHTML = x + "x" + y;
+        selectDimensions.appendChild(option);
+        if(x === y) {
+            x += 1;
+        } else if (x > y) {
+            y += 1;
+        }
+        if(x === 3 && y === 3) {
+            x += 1;
+        }
+    }
+    
+    submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.innerHTML = "Ändra";
+    submitButton.onclick = function(e) {
+        e.preventDefault();
+        that.setCurrentDimensions(selectDimensions.value);
+        that.newGame();
+        that.desktop.toggleOverlay();
+        return false;
+    };
+    alertWindow.appendChild(submitButton);
+};
+
+DESKTOPAPP.apps.Memory.prototype.createSettingsMenu = function() {
+    var contextMenuSettings, contextMenuSettingsMenu, 
+    contextMenuSettingsMenuRestartGame, contextMenuSettingsMenuRestartGameImg, contextMenuSettingsMenuRestartGameA,
+    contextMenuSettingsMenuGameSettings, contextMenuSettingsMenuGameSettingsImg, contextMenuSettingsMenuGameSettingsA;
+    var that = this;
+    
+    contextMenuSettings = document.createElement("li");
+    contextMenuSettings.innerHTML = "Inställningar";
+    contextMenuSettings.onclick = function(e) {
+        e.preventDefault();
+            if(contextMenuSettingsMenu.style.display === "none"){
+                contextMenuSettingsMenu.style.display = "block";
+            } else {
+                contextMenuSettingsMenu.style.display = "none";
+            }
+        return false;
+    };
+    contextMenuSettingsMenu = document.createElement("ul");
+    contextMenuSettingsMenu.style.display = "none";
+    contextMenuSettings.appendChild(contextMenuSettingsMenu);
+    
+    /* Updater interval */
+    contextMenuSettingsMenuRestartGame = document.createElement("li");
+    contextMenuSettingsMenu.appendChild(contextMenuSettingsMenuRestartGame);
+    
+    contextMenuSettingsMenuRestartGameImg = document.createElement("img");
+    contextMenuSettingsMenuRestartGameImg.alt = "Starta om spelet iconen";
+    contextMenuSettingsMenuRestartGameImg.title = "Klicka här för att ändra starta om spelet";
+    contextMenuSettingsMenuRestartGameImg.src = "DESKTOPAPP/pics/appIcons/menuIcons/update.png";
+    
+    contextMenuSettingsMenuRestartGameA = document.createElement("a");
+    contextMenuSettingsMenuRestartGameA.innerHTML = "Starta om";
+    contextMenuSettingsMenuRestartGameA.onclick = function(e) {
+        e.preventDefault;
+        that.newGame();
+        return false;
+    };
+    contextMenuSettingsMenuRestartGameA.insertBefore(contextMenuSettingsMenuRestartGameImg, contextMenuSettingsMenuRestartGameA.childNodes[0]);
+    contextMenuSettingsMenuRestartGame.appendChild(contextMenuSettingsMenuRestartGameA);
+    
+    /* Game settings */
+    contextMenuSettingsMenuGameSettings = document.createElement("li");
+    contextMenuSettingsMenu.appendChild(contextMenuSettingsMenuGameSettings);
+    
+    contextMenuSettingsMenuGameSettingsImg = document.createElement("img");
+    contextMenuSettingsMenuGameSettingsImg.alt = "Spel inställnings iconen";
+    contextMenuSettingsMenuGameSettingsImg.title = "Klicka här för att ändra spel inställningarna";
+    contextMenuSettingsMenuGameSettingsImg.src = "DESKTOPAPP/pics/appIcons/menuIcons/settings.png";
+    
+    contextMenuSettingsMenuGameSettingsA = document.createElement("a");
+    contextMenuSettingsMenuGameSettingsA.innerHTML = "Inställningar...";
+    contextMenuSettingsMenuGameSettingsA.onclick = function(e) {
+        e.preventDefault;
+        that.gameSettingsMenu();
+        return false;
+    };
+    contextMenuSettingsMenuGameSettingsA.insertBefore(contextMenuSettingsMenuGameSettingsImg, contextMenuSettingsMenuGameSettingsA.childNodes[0]);
+    contextMenuSettingsMenuGameSettings.appendChild(contextMenuSettingsMenuGameSettingsA);
+    
+    this.contextMenu.appendChild(contextMenuSettings);
 };
