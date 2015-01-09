@@ -177,6 +177,7 @@ table {
     border-radius: 0.2em;
     color: #FFFFFF;
     float: right;
+    cursor: pointer;
 }
 .desktopApp .windowHeader button:hover {
     background-color: #E6473D;
@@ -195,13 +196,12 @@ table {
 .desktopApp .windowHeader .contextMenu li {
     display: inline-block;
     padding: 0 1em;
+    cursor: pointer;
 }
 .desktopApp .windowHeader .contextMenu ul {
     display: none;
     position: absolute;
     top: 1.3em;
-    left: 0;
-    right: auto;
     list-style: none;
     background-color: #000000;
 }
