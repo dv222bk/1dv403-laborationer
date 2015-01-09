@@ -98,14 +98,17 @@ table {
     background-color: #111111;
 }
 .desktopApp .windowHeader {
+    height: 3em;
+    position: relative;
     border-top-left-radius: 0.3em;
     border-top-right-radius: 0.3em;
+    z-index: 9999;
 }
 .desktopApp .windowStatus {
     border-bottom-left-radius: 0.3em;
     border-bottom-right-radius: 0.3em;
 }
-.desktopApp .windowHeader p {
+.desktopApp .windowHeader p, .desktopApp .windowHeader .contextMenu {
     font: bold 0.8em Arial, Helvetica, sans-serif;
     color: #FFFFFF;
     margin-top: 0.7em;
@@ -130,8 +133,43 @@ table {
 .desktopApp .windowHeader button:hover {
     background-color: #E6473D;
 }
+.desktopApp .windowHeader .contextMenu {
+    clear: both;
+    margin: 0 1em;
+    position: relative;
+    width: auto;
+}
+.desktopApp .windowHeader .contextMenu img {
+    width: 2em;
+    height: 2em;
+    margin-top: 1em;
+}
+.desktopApp .windowHeader .contextMenu:hover {
+    background-color: #333333;
+}
+.desktopApp .windowHeader .contextMenu ul {
+    display: none;
+}
+.desktopApp .windowHeader .contextMenu li:hover > ul {
+    display: block;
+    position: absolute;
+    top: 1.3em;
+    left: 0;
+    right: auto;
+    background-color: #000000;
+    list-style: none;
+}
+.desktopApp .windowHeader .contextMenu li ul li a {
+    display: block;
+    width: 12em;
+    line-height: 4em;
+}
+.desktopApp .windowHeader .contextMenu li ul li:hover {
+    background-color: #333333;
+}
 .desktopApp .windowBody {
     width: 100%;
+    position: relative;
     max-height: 21em;
     background-color: #FFFFFF;
     overflow-y: auto;

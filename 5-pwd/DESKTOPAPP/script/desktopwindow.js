@@ -10,7 +10,7 @@ DESKTOPAPP.DesktopWindow = function() {
 };
 
 DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, height) {
-    var windowHeader, appIcon, appName, closeButton;
+    var windowHeader, appIcon, appName, closeButton, contextMenu, contextMenuArkiv, contextMenuArkivMenu, contextMenuArkivMenuClose, contextMenuArkivMenuCloseA, contextMenuArkivMenuCloseImg;
     var that = this;
     
     this.desktop = desktop;
@@ -56,6 +56,36 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, heigh
     };
     windowHeader.appendChild(closeButton);
     
+    /* Context Menu */
+    contextMenu = document.createElement("ul");
+    contextMenu.className = "contextMenu";
+    windowHeader.appendChild(contextMenu);
+    
+    contextMenuArkiv = document.createElement("li");
+    contextMenuArkiv.innerHTML = "Arkiv";
+    contextMenu.appendChild(contextMenuArkiv);
+    
+    contextMenuArkivMenu = document.createElement("ul");
+    contextMenuArkiv.appendChild(contextMenuArkivMenu);
+    
+    contextMenuArkivMenuClose = document.createElement("li");
+    contextMenuArkivMenu.appendChild(contextMenuArkivMenuClose);
+    
+    contextMenuArkivMenuCloseImg = document.createElement("img");
+    contextMenuArkivMenuCloseImg.alt = "Stäng fönstret iconen";
+    contextMenuArkivMenuCloseImg.title = "Klicka här för att stänga ner fönstret";
+    contextMenuArkivMenuCloseImg.src = "DESKTOPAPP/pics/menuIcons/close.png";
+    
+    contextMenuArkivMenuCloseA = document.createElement("a");
+    contextMenuArkivMenuCloseA.innerHTML = "Stäng fönstret";
+    contextMenuArkivMenuCloseA.onclick = function(e) {
+        e.preventDefault;
+        that.closeWindow();
+        return false;
+    };
+    contextMenuArkivMenuCloseA.insertBefore(contextMenuArkivMenuCloseImg, contextMenuArkivMenuCloseA.childNodes[0]);
+    contextMenuArkivMenuClose.appendChild(contextMenuArkivMenuCloseA);
+
     /* WindowBody */
     this.windowBody = document.createElement("div");
     this.windowBody.className = "windowBody";
