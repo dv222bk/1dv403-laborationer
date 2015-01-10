@@ -162,6 +162,9 @@ DESKTOPAPP.apps.RSSReader.prototype.changeRSSMenu = function() {
                 feedName = document.createElement("input");
                 feedName.type = "text";
                 feedName.name = "customRSSFeed";
+                feedName.onmousedown = function(e) {
+                    radioButton.checked = true;
+                };
                 break;
         }
         alertWindow.appendChild(radioButton);
@@ -173,15 +176,17 @@ DESKTOPAPP.apps.RSSReader.prototype.changeRSSMenu = function() {
     submitButton.innerHTML = "Ändra";
     submitButton.onmousedown = function(e) {
         var radioButton = alertWindow.querySelector('input[type=radio]:checked');
-        e.preventDefault();
-        that.windowBody.scrollTop = 0;
-        if(radioButton.value === "user") {
-            that.changeRSSFeed(alertWindow.querySelector('input[type=text]').value);
-        } else {
-            that.changeRSSFeed(radioButton.value);
+        if(radioButton !== null) {
+            e.preventDefault();
+            that.windowBody.scrollTop = 0;
+            if(radioButton.value === "user") {
+                that.changeRSSFeed(alertWindow.querySelector('input[type=text]').value);
+            } else {
+                that.changeRSSFeed(radioButton.value);
+            }
+            that.desktop.toggleOverlay();
+            return false;
         }
-        that.desktop.toggleOverlay();
-        return false;
     };
     alertWindow.appendChild(submitButton);
 };
