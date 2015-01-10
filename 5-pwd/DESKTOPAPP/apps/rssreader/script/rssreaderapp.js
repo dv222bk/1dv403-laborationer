@@ -162,7 +162,7 @@ DESKTOPAPP.apps.RSSReader.prototype.changeRSSMenu = function() {
                 feedName = document.createElement("input");
                 feedName.type = "text";
                 feedName.name = "customRSSFeed";
-                feedName.focus = function(e) {
+                feedName.onfocus = function(e) {
                     radioButton.checked = true;
                 };
                 break;
