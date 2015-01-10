@@ -289,6 +289,7 @@ DESKTOPAPP.DesktopWindow.prototype.removeResizeWindowEvents = function() {
 
 DESKTOPAPP.DesktopWindow.prototype.showLoading = function() {
     var p, img;
+    this.removeStatus();
     p = document.createElement("p");
     p.innerHTML = " Loading...";
     img = document.createElement("img");
@@ -313,6 +314,6 @@ DESKTOPAPP.DesktopWindow.prototype.updateStatus = function() {
     this.removeStatus();
     currentTime = new Date();
     p = document.createElement("p");
-    p.innerHTML = "Senast Uppdaterad: " + currentTime.toTimeString();
+    p.innerHTML = "Senast Uppdaterad: " + currentTime.getHours() + ":" + currentTime.getMinutes();
     this.statusField.insertBefore(p, this.statusField.childNodes[0]);
 };
