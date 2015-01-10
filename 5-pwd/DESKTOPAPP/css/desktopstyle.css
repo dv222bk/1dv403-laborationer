@@ -152,6 +152,10 @@ table {
     border-top-right-radius: 0.3em;
     z-index: 1;
 }
+.desktopApp .windowHeader:active {
+    cursor: move;
+    
+}
 .desktopApp .windowStatus {
     border-bottom-left-radius: 0.3em;
     border-bottom-right-radius: 0.3em;
@@ -161,6 +165,7 @@ table {
     color: #FFFFFF;
     margin-top: 0.7em;
     float: left;
+    cursor: default;
 }
 .desktopApp .windowHeader img {
     margin: 0.5em 1em 0 0.5em;
