@@ -175,6 +175,7 @@ DESKTOPAPP.apps.RSSReader.prototype.changeRSSMenu = function() {
     submitButton.onmousedown = function(e) {
         var radioButton = alertWindow.querySelector('input[type=radio]:checked');
         e.preventDefault();
+        that.windowBody.scrollTop = 0;
         if(radioButton.value === "user") {
             that.changeRSSFeed(alertWindow.querySelector('input[type=text]').value);
         } else {
@@ -259,6 +260,7 @@ DESKTOPAPP.apps.RSSReader.prototype.createSettingsMenu = function() {
     contextMenuSettingsMenuUpdateA.innerHTML = "Uppdatera fönstret";
     contextMenuSettingsMenuUpdateA.onmousedown = function(e) {
         e.preventDefault;
+        that.windowBody.scrollTop = 0;
         that.callAjax();
         return false;
     };
