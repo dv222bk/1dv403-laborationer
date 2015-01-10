@@ -132,6 +132,7 @@ table {
     border-left: 0.2em solid black;
     border-right: 0.2em solid black;
     border-radius: 1em;
+    border-bottom-right-radius: 0;
     overflow: hidden;
     box-shadow: 2px 2px 5px #000000;
 }
@@ -156,13 +157,13 @@ table {
 .desktopApp .windowHeader div {
     width: 100%;
     height: 1.8em;
+    cursor: pointer;
 }
 .desktopApp .windowHeader div:active {
     cursor: move;
 }
 .desktopApp .windowStatus {
     border-bottom-left-radius: 0.3em;
-    border-bottom-right-radius: 0.3em;
 }
 .desktopApp .windowHeader p, .desktopApp .windowHeader .contextMenu {
     font: bold 0.8em Arial, Helvetica, sans-serif;
@@ -240,6 +241,20 @@ table {
 .desktopApp .windowStatus {
     font: bold 0.7em Arial, Helvetica, sans-serif;
     color: #CCCCCC;
-    width: 97%;
-    padding: 2% 2% 0 1%;
+    width: 99%;
+    padding: 2% 0 0 1%;
+}
+.desktopApp .windowStatus p {
+    display: inline;
+}
+.desktopApp .windowStatus .windowResize {
+    float: right;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.5em;
+    padding: 0.5em 0 0 0.5em;
+    background-image: url(../pics/menuIcons/resize.png);
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    cursor: se-resize;
 }

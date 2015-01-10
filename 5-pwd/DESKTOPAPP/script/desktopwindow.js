@@ -4,7 +4,7 @@ var DESKTOPAPP = DESKTOPAPP || {};
 
 DESKTOPAPP.DesktopWindow = function() {
     /* Move Window variables */
-    var currentX, currentY, moveWindowFunction, removeMoveWindowEventsFunction;
+    var currentX, currentY, moveWindowFunction, removeMoveWindowEventsFunction, resizeWindowFunction, removeResizeWindowEventsFunction;
     
     this.windowBody;
     this.windowHolder;
@@ -37,10 +37,23 @@ DESKTOPAPP.DesktopWindow = function() {
     this.setRemoveMoveWindowEventsFunction = function(windowFunction) {
         removeMoveWindowEventsFunction = windowFunction;
     };
+    this.getResizeWindowFunction = function() {
+        return resizeWindowFunction;
+    };
+    this.setResizeWindowFunction = function(windowFunction) {
+        resizeWindowFunction = windowFunction;
+    };
+    this.getRemoveResizeWindowEventsFunction = function() {
+        return removeResizeWindowEventsFunction;
+    };
+    this.setRemoveResizeWindowEventsFunction = function(windowFunction) {
+        removeResizeWindowEventsFunction = windowFunction;
+    };
 };
 
-DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, height) {
-    var windowHeader, windowHeaderTop, appIcon, appName, closeButton, contextMenuArkivMenu, contextMenuArkivMenuClose, contextMenuArkivMenuCloseA, contextMenuArkivMenuCloseImg;
+DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, width, height) {
+    var windowHeader, windowHeaderTop, appIcon, appName, closeButton, windowResize,
+    contextMenuArkivMenu, contextMenuArkivMenuClose, contextMenuArkivMenuCloseA, contextMenuArkivMenuCloseImg;
     var that = this;
     
     this.desktop = desktop;
@@ -151,6 +164,24 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, heigh
     this.statusField.className = "windowStatus";
     this.windowHolder.appendChild(this.statusField);
     
+    if(resizeable) {
+        /* WindowResize */
+        windowResize = document.createElement("div");
+        windowResize.className = "windowResize";
+        windowResize.onmousedown = function(e) {
+            if(e.target === this) {
+                var cords = that.calculateMousePosition(e);
+                that.setCurrentX(cords.x);
+                that.setCurrentY(cords.y);
+                that.setResizeWindowFunction(that.resizeWindow.bind(that));
+                that.setRemoveResizeWindowEventsFunction(that.removeResizeWindowEvents.bind(that));
+                document.addEventListener("mousemove", that.getResizeWindowFunction(), false);
+                document.addEventListener("mouseup", that.getRemoveResizeWindowEventsFunction(), false);
+            }
+        };
+        this.statusField.appendChild(windowResize);
+    }
+    
     if(height !== undefined) {
         this.windowBody.style.maxHeight = height + "px";
         this.windowBody.style.overflow = "hidden";
@@ -166,20 +197,34 @@ DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
 };
 
 DESKTOPAPP.DesktopWindow.prototype.moveWindow = function(e) {
-    var cords, validateCords;
+    var cords, validateMoveCords;
     cords = this.calculateMousePosition(e);
-    validateCords = this.validateCords(parseInt(this.windowHolder.style.left, 10) - this.getCurrentX() + cords.x, parseInt(this.windowHolder.style.top, 10) - this.getCurrentY() + cords.y);
-    if(validateCords.x) {
+    validateMoveCords = this.validateMoveCords(parseInt(this.windowHolder.style.left, 10) - this.getCurrentX() + cords.x, parseInt(this.windowHolder.style.top, 10) - this.getCurrentY() + cords.y);
+    if(validateMoveCords.x) {
         this.windowHolder.style.left = parseInt(this.windowHolder.style.left, 10) - this.getCurrentX() + cords.x + "px";
         this.setCurrentX(cords.x);
     }
-    if(validateCords.y) {
+    if(validateMoveCords.y) {
         this.windowHolder.style.top = parseInt(this.windowHolder.style.top, 10) - this.getCurrentY() + cords.y + "px";
         this.setCurrentY(cords.y);
     }
 };
 
-DESKTOPAPP.DesktopWindow.prototype.validateCords = function(xCord, yCord) {
+DESKTOPAPP.DesktopWindow.prototype.resizeWindow = function(e) {
+    var cords, validateNewWindowSize;
+    cords = this.calculateMousePosition(e);
+    validateNewWindowSize = this.validateNewWindowSize(this.windowHolder.clientWidth - this.getCurrentX() + cords.x, this.windowHolder.offsetHeight - this.getCurrentY() + cords.y);
+    if(validateNewWindowSize.x) {
+        this.windowHolder.style.width = this.windowHolder.clientWidth - this.getCurrentX() + cords.x + "px";
+        this.setCurrentX(cords.x);
+    }
+    if(validateNewWindowSize.y) {
+        this.windowBody.style.height, this.windowBody.style.minHeight = this.windowBody.clientHeight - this.getCurrentY() + cords.y + "px";
+        this.setCurrentY(cords.y);
+    }
+};
+
+DESKTOPAPP.DesktopWindow.prototype.validateMoveCords = function(xCord, yCord) {
     var maxX, maxY, result;
     maxX = window.innerWidth - this.windowHolder.offsetWidth;
     maxY = window.innerHeight - this.windowHolder.offsetHeight - this.desktop.root.querySelector(".desktopToolbar").offsetHeight;
@@ -188,6 +233,30 @@ DESKTOPAPP.DesktopWindow.prototype.validateCords = function(xCord, yCord) {
         y: ((yCord <= maxY) && (yCord >= 0)) ? true : false
     };
     return result;
+};
+
+DESKTOPAPP.DesktopWindow.prototype.validateNewWindowSize = function(width, height) {
+    var maxWidth, maxHeight, minWidth, minHeight, result, cords;
+    minWidth = 300;
+    minHeight = 300;
+    cords = this.getWindowHolderCords();
+    maxWidth = window.innerWidth - cords.x;
+    maxHeight = window.innerHeight - this.desktop.root.querySelector(".desktopToolbar").clientHeight - cords.y;
+    result = {
+        x: ((width <= maxWidth) && (width >= minWidth)) ? true : false,
+        y: ((height <= maxHeight) && (height >= minHeight)) ? true : false
+    };
+    return result; 
+};
+
+/* http://www.kirupa.com/html5/get_element_position_using_javascript.htm */
+DESKTOPAPP.DesktopWindow.prototype.getWindowHolderCords = function() {
+    var xPosition, yPosition;
+    
+    xPosition = this.windowHolder.offsetLeft - this.windowHolder.scrollLeft + this.windowHolder.clientLeft;
+    yPosition = this.windowHolder.offsetTop - this.windowHolder.scrollTop + this.windowHolder.clientTop;
+   
+    return { x: xPosition, y: yPosition };
 };
 
 DESKTOPAPP.DesktopWindow.prototype.calculateMousePosition = function(e) {
@@ -213,6 +282,11 @@ DESKTOPAPP.DesktopWindow.prototype.removeMoveWindowEvents = function() {
     document.removeEventListener("mouseup", this.getRemoveMoveWindowEventsFunction(), false);
 };
 
+DESKTOPAPP.DesktopWindow.prototype.removeResizeWindowEvents = function() {
+    document.removeEventListener("mousemove", this.getResizeWindowFunction(), false);
+    document.removeEventListener("mouseup", this.getRemoveResizeWindowEventsFunction(), false);
+};
+
 DESKTOPAPP.DesktopWindow.prototype.showLoading = function() {
     var p, img;
     p = document.createElement("p");
@@ -221,15 +295,24 @@ DESKTOPAPP.DesktopWindow.prototype.showLoading = function() {
     img.alt = "Laddnings icon";
     img.title = "Laddar...";
     img.src = "DESKTOPAPP/pics/ajax-loader.gif";
-    this.statusField.appendChild(p);
+    this.statusField.insertBefore(p, this.statusField.childNodes[0]);
     p.insertBefore(img, p.childNodes[0]);
 };
 
 DESKTOPAPP.DesktopWindow.prototype.removeStatus = function() {
-    this.statusField.innerHTML = "";
+    var i;
+    for(i = this.statusField.childNodes.length - 1; i >= 0; i -= 1) {
+        if(this.statusField.childNodes[i].tagName != "DIV") {
+            this.statusField.removeChild(this.statusField.childNodes[i]);
+        }
+    }
 };
 
 DESKTOPAPP.DesktopWindow.prototype.updateStatus = function() {
-    var currentTime = new Date();
-    this.statusField.innerHTML = "Senast Uppdaterad: " + currentTime.toTimeString();
+    var p, currentTime;
+    this.removeStatus();
+    currentTime = new Date();
+    p = document.createElement("p");
+    p.innerHTML = "Senast Uppdaterad: " + currentTime.toTimeString();
+    this.statusField.insertBefore(p, this.statusField.childNodes[0]);
 };

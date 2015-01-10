@@ -35,7 +35,7 @@ DESKTOPAPP.apps.RSSReader = function(app, desktop) {
     this.desktop = desktop;
     this.appBody;
     
-    this.createWindow(this.desktop);
+    this.createWindow(this.desktop, true);
     this.createApp();
 };
 
@@ -65,7 +65,6 @@ DESKTOPAPP.apps.RSSReader.prototype.callAjax = function() {
     xhr.abort();
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4) {
-            /* Remove everything from the statusfield */
             that.updateStatus();
             
             that.appBody.innerHTML = "";
@@ -74,7 +73,7 @@ DESKTOPAPP.apps.RSSReader.prototype.callAjax = function() {
             } else {
                 that.appBody.innerHTML = "Läsfel. Status: " + xhr.status;
             }
-        } else {
+        } else if(xhr.readyState === 1) {
             that.showLoading();
         }
     };

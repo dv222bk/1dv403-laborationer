@@ -12,7 +12,7 @@ DESKTOPAPP.apps.ImageViewer = function(app, desktop) {
     this.app = app;
     this.desktop = desktop;
     
-    this.createWindow(this.desktop);
+    this.createWindow(this.desktop, true);
     this.createApp();
 };
 
@@ -70,7 +70,7 @@ DESKTOPAPP.apps.ImageViewer.prototype.createApp = function() {
             } else {
                 console.log("Läsfel. Status: " + xhr.status);
             }
-        } else {
+        } else if(xhr.readyState === 1) {
             that.showLoading();
         }
     };
@@ -89,7 +89,7 @@ DESKTOPAPP.apps.ImageViewer.ImageWindow = function(app, desktop, imgHeight, imgW
     this.imgWidth = imgWidth;
     this.imgURL = imgURL;
     
-    this.createWindow(this.desktop, this.imgWidth, this.imgHeight);
+    this.createWindow(this.desktop, false, this.imgWidth, this.imgHeight);
     this.createImageWindow();
 };
 

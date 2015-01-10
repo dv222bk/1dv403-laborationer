@@ -84,7 +84,7 @@ DESKTOPAPP.apps.Memory = function(app, desktop) {
         clearInterval(wrongTiles);
     };
 
-    this.createWindow(this.desktop, 220);
+    this.createWindow(this.desktop, false, 220);
     this.createSettingsMenu();
     this.createApp();
 };
