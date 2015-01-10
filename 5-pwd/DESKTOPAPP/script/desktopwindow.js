@@ -66,13 +66,15 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, width, heigh
     /* WindowHeader Top */
     windowHeaderTop = document.createElement("div");
     windowHeaderTop.onmousedown = function(e) {
-        var cords = that.calculateMousePosition(e);
-        that.setCurrentX(cords.x);
-        that.setCurrentY(cords.y);
-        that.setMoveWindowFunction(that.moveWindow.bind(that));
-        that.setRemoveMoveWindowEventsFunction(that.removeMoveWindowEvents.bind(that));
-        document.addEventListener("mousemove", that.getMoveWindowFunction(), false);
-        document.addEventListener("mouseup", that.getRemoveMoveWindowEventsFunction(), false);
+        if(e.target === this) {
+            var cords = that.calculateMousePosition(e);
+            that.setCurrentX(cords.x);
+            that.setCurrentY(cords.y);
+            that.setMoveWindowFunction(that.moveWindow.bind(that));
+            that.setRemoveMoveWindowEventsFunction(that.removeMoveWindowEvents.bind(that));
+            document.addEventListener("mousemove", that.getMoveWindowFunction(), false);
+            document.addEventListener("mouseup", that.getRemoveMoveWindowEventsFunction(), false);
+        }
     };
     windowHeader.appendChild(windowHeaderTop);
     
@@ -164,11 +166,28 @@ DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
 };
 
 DESKTOPAPP.DesktopWindow.prototype.moveWindow = function(e) {
-    var cords = this.calculateMousePosition(e);
-    this.windowHolder.style.left = parseInt(this.windowHolder.style.left, 10) - this.getCurrentX() + cords.x + "px";
-    this.windowHolder.style.top = parseInt(this.windowHolder.style.top, 10) - this.getCurrentY() + cords.y + "px";
-    this.setCurrentX(cords.x);
-    this.setCurrentY(cords.y);
+    var cords, validateCords;
+    cords = this.calculateMousePosition(e);
+    validateCords = this.validateCords(parseInt(this.windowHolder.style.left, 10) - this.getCurrentX() + cords.x, parseInt(this.windowHolder.style.top, 10) - this.getCurrentY() + cords.y);
+    if(validateCords.x) {
+        this.windowHolder.style.left = parseInt(this.windowHolder.style.left, 10) - this.getCurrentX() + cords.x + "px";
+        this.setCurrentX(cords.x);
+    }
+    if(validateCords.y) {
+        this.windowHolder.style.top = parseInt(this.windowHolder.style.top, 10) - this.getCurrentY() + cords.y + "px";
+        this.setCurrentY(cords.y);
+    }
+};
+
+DESKTOPAPP.DesktopWindow.prototype.validateCords = function(xCord, yCord) {
+    var maxX, maxY, result;
+    maxX = window.innerWidth - this.windowHolder.offsetWidth;
+    maxY = window.innerHeight - this.windowHolder.offsetHeight - this.desktop.root.querySelector(".desktopToolbar").offsetHeight;
+    result = {
+        x: ((xCord <= maxX) && (xCord >= 0)) ? true : false,
+        y: ((yCord <= maxY) && (yCord >= 0)) ? true : false
+    };
+    return result;
 };
 
 DESKTOPAPP.DesktopWindow.prototype.calculateMousePosition = function(e) {
@@ -189,10 +208,9 @@ DESKTOPAPP.DesktopWindow.prototype.calculateMousePosition = function(e) {
 	return({ x: posx, y: posy });
 };
 
-DESKTOPAPP.DesktopWindow.prototype.removeMoveWindowEvents = function(e) {
+DESKTOPAPP.DesktopWindow.prototype.removeMoveWindowEvents = function() {
     document.removeEventListener("mousemove", this.getMoveWindowFunction(), false);
     document.removeEventListener("mouseup", this.getRemoveMoveWindowEventsFunction(), false);
-    this.onmousedown = null;
 };
 
 DESKTOPAPP.DesktopWindow.prototype.showLoading = function() {

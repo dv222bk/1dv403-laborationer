@@ -133,7 +133,7 @@ DESKTOPAPP.Desktop.prototype.getWindowCords = function(windowHolder) {
     
     if(windowHolder !== undefined) {
         maxX = window.innerWidth - windowHolder.offsetWidth - 40;
-        maxY = window.innerHeight - windowHolder.offsetHeight - 70;
+        maxY = window.innerHeight - windowHolder.offsetHeight - this.root.querySelector(".desktopToolbar").offsetHeight;
     }
     
     while(windowHolder) {
