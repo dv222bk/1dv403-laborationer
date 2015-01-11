@@ -4,7 +4,7 @@ var DESKTOPAPP = DESKTOPAPP || {};
 DESKTOPAPP.apps = DESKTOPAPP.apps || {};
 
 DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
-    var messages, userName, updateTime, ajaxInterval, numberOfMsgs, lastXMLGet;
+    var messages, username, updateTime, ajaxInterval, numberOfMsgs, lastXMLGet;
     
     messages = [];
     
@@ -14,9 +14,9 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
     this.messageHolder;
     this.textarea;
     
-    userName = "test";
-    updateTime = 10000;
-    numberOfMsgs = 50;
+    username = (localStorage.getItem("LabbyMezzage Username") === null) ? "Anonymous" : localStorage.getItem("LabbyMezzage Username");
+    updateTime = (localStorage.getItem("LabbyMezzage Updatetime") === null) ? 10000 : localStorage.getItem("LabbyMezzage Updatetime");
+    numberOfMsgs = (localStorage.getItem("LabbyMezzage Msgnumber") === null) ? 50 : localStorage.getItem("LabbyMezzage Msgnumber");
     
     /* Inherit from DesktopWindow */
     DESKTOPAPP.DesktopWindow.call(this);
@@ -33,12 +33,16 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
         messages = [];
     };
     
-    this.getUserName = function() {
-        return userName;
+    this.getUsername = function() {
+        return username;
     };
     
-    this.setUserName = function(_userName) {
-        userName = _userName;
+    this.setUsername = function(_username) {
+        username = _username;
+    };
+    
+    this.reloadUsername = function() {
+        username = (localStorage.getItem("LabbyMezzage Username") === null) ? username : localStorage.getItem("LabbyMezzage Username");
     };
     
     this.getUpdateTime = function() {
@@ -47,6 +51,10 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
     
     this.setUpdateTime = function(miliSeconds) {
         updateTime = miliSeconds;
+    };
+    
+    this.reloadUpdateTime = function() {
+        updateTime = (localStorage.getItem("LabbyMezzage Updatetime") === null) ? updateTime: localStorage.getItem("LabbyMezzage Updatetime");
     };
     
     this.setAjaxInterval = function(interval) {
@@ -65,6 +73,10 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
         numberOfMsgs = number;
     };
     
+    this.reloadNumberOfMsgs = function() {
+        numberOfMsgs = (localStorage.getItem("LabbyMezzage Msgnumber") === null) ? numberOfMsgs : localStorage.getItem("LabbyMezzage Msgnumber");
+    };
+    
     this.getLastXMLGet = function() {
         return lastXMLGet;
     };
@@ -74,6 +86,7 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
     };
     
     this.createWindow(this.desktop, true);
+    this.createSettingsMenu();
     this.createApp();
 };
 
@@ -113,7 +126,7 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.createApp = function() {
     writeMessage.appendChild(this.textarea);
 
     this.getAjax();
-    this.setGetInterval(this.getUpdateTime());
+    this.setGetInterval();
 };
 
 DESKTOPAPP.apps.LabbyMezzage.prototype.closeWindow = function() {
@@ -125,6 +138,9 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.closeWindow = function() {
 DESKTOPAPP.apps.LabbyMezzage.prototype.getAjax = function() {
     var xhr, parser, XMLData, message;
     var that = this;
+    
+    this.reloadNumberOfMsgs();
+    this.reloadUpdateTime();
     
     xhr = new XMLHttpRequest();
     xhr.abort();
@@ -168,12 +184,13 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.getAjax = function() {
 };
 
 DESKTOPAPP.apps.LabbyMezzage.prototype.postAjax = function() {
-    var xhr, JSONData;
+    var xhr;
     var that = this;
-    
     
     this.textarea.value = this.textarea.value.replace( /<[^>]+>/g, '' ).trim();
     if(this.textarea.value.trim() !== "") {
+        this.reloadUsername();
+        
         xhr = new XMLHttpRequest();
         xhr.abort();
         xhr.onreadystatechange = function() {
@@ -190,18 +207,18 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.postAjax = function() {
             }
         };
         xhr.open("POST", "http://homepage.lnu.se/staff/tstjo/labbyserver/setMessage.php", true);
-        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xhr.send("text=" + this.textarea.value + "&username=" + this.getUserName());
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("text=" + this.textarea.value + "&username=" + this.getUsername());
     }
     this.textarea.value = "";
 };
 
-DESKTOPAPP.apps.LabbyMezzage.prototype.setGetInterval = function(miliSeconds) {
+DESKTOPAPP.apps.LabbyMezzage.prototype.setGetInterval = function() {
     var that = this;
     this.clearAjaxInterval();
     this.setAjaxInterval(setInterval(function() {
        that.getAjax(); 
-    }, miliSeconds));
+    }, this.getUpdateTime()));
 };
 
 DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessage = function(messageArrayID) {
@@ -231,9 +248,6 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessage = function(messageArrayID) 
     messageText.innerHTML = this.getMessage(messageArrayID).getHTMLText();
     messageContainer.appendChild(messageText);
     
-    /* Scroll to the bottom of the page, in case the user wasn't already there 
-    this.messageHolder.scrollTo(0, this.messageHolder.scrollHeight);
-    */
 };
 
 DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessages = function() {
@@ -248,6 +262,210 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessages = function() {
     for(i = 0; i < this.getMessages().length; i+=1) {
         this.renderMessage(i);
     }
+    
+    // Scroll to bottom
+    this.messageHolder.scrollTop = this.messageHolder.scrollHeight;
+};
+
+DESKTOPAPP.apps.LabbyMezzage.prototype.updateMenu = function() {
+    var alertWindow, intervalSelect, intervalOption, option, submitButton;
+    var that = this;
+    
+    this.desktop.toggleOverlay();
+    
+    alertWindow = document.createElement("div");
+    alertWindow.className = "alertWindow";
+    this.desktop.overlay.appendChild(alertWindow);
+    
+    intervalSelect = document.createElement("select");
+    alertWindow.appendChild(intervalSelect);
+    
+    for(option = 1; option < 6; option += 1) {
+        intervalOption = document.createElement("option");
+        intervalOption.value = option * 10000;
+        intervalOption.innerHTML = (option * 10) + " sekunder";
+        intervalSelect.appendChild(intervalOption);
+    }
+    
+    submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.innerHTML = "Ändra";
+    submitButton.onmousedown = function(e) {
+        e.preventDefault();
+        that.setUpdateTime(intervalSelect.value);
+        localStorage.setItem("LabbyMezzage Updatetime", intervalSelect.value);
+        that.setGetInterval();
+        that.desktop.toggleOverlay();
+        return false;
+    };
+    alertWindow.appendChild(submitButton);
+};
+
+DESKTOPAPP.apps.LabbyMezzage.prototype.changeMsgNumberMenu = function() {
+    var alertWindow, msgNumberSelect, msgNumberOption, option, submitButton;
+    var that = this;
+    
+    this.desktop.toggleOverlay();
+    
+    alertWindow = document.createElement("div");
+    alertWindow.className = "alertWindow";
+    this.desktop.overlay.appendChild(alertWindow);
+    
+    msgNumberSelect = document.createElement("select");
+    alertWindow.appendChild(msgNumberSelect);
+    
+    for(option = 1; option < 6; option += 1) {
+        msgNumberOption = document.createElement("option");
+        msgNumberOption.value = option * 10;
+        msgNumberOption.innerHTML = (option * 10) + " meddelanden";
+        msgNumberSelect.appendChild(msgNumberOption);
+    }
+    
+    submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.innerHTML = "Ändra";
+    submitButton.onmousedown = function(e) {
+        e.preventDefault();
+        that.setNumberOfMsgs(msgNumberSelect.value);
+        localStorage.setItem("LabbyMezzage Msgnumber", msgNumberSelect.value);
+        that.getAjax();
+        that.desktop.toggleOverlay();
+        return false;
+    };
+    alertWindow.appendChild(submitButton);
+};
+
+DESKTOPAPP.apps.LabbyMezzage.prototype.changeUsernameMenu = function() {
+    var alertWindow, usernameField, submitButton;
+    var that = this;
+    
+    this.desktop.toggleOverlay();
+    
+    alertWindow = document.createElement("div");
+    alertWindow.className = "alertWindow";
+    this.desktop.overlay.appendChild(alertWindow);
+    
+    usernameField = document.createElement("input");
+    usernameField.type = "text";
+    usernameField.name = "newUsername";
+    usernameField.value = this.getUsername();
+    alertWindow.appendChild(usernameField);
+    
+    submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.innerHTML = "Ändra";
+    submitButton.onmousedown = function(e) {
+        if(usernameField.value.trim() !== "") {
+            e.preventDefault();
+            that.setUsername(usernameField.value.trim());
+            localStorage.setItem("LabbyMezzage Username", usernameField.value.trim());
+            that.desktop.toggleOverlay();
+            return false;
+        }
+    };
+    alertWindow.appendChild(submitButton);
+};
+
+DESKTOPAPP.apps.LabbyMezzage.prototype.createSettingsMenu = function() {
+    var contextMenuSettings, contextMenuSettingsMenu, 
+    contextMenuSettingsMenuUpdateInterval, contextMenuSettingsMenuUpdateIntervalImg, contextMenuSettingsMenuUpdateIntervalA,
+    contextMenuSettingsMenuMsgNumber, contextMenuSettingsMenuMsgNumberImg, contextMenuSettingsMenuMsgNumberA,
+    contextMenuSettingsMenuUsername, contextMenuSettingsMenuUsernameImg, contextMenuSettingsMenuUsernameA,
+    contextMenuSettingsMenuUpdate, contextMenuSettingsMenuUpdateImg, contextMenuSettingsMenuUpdateA;
+    var that = this;
+    
+    contextMenuSettings = document.createElement("li");
+    contextMenuSettings.innerHTML = "Inställningar";
+    contextMenuSettings.onmousedown = function(e) {
+        e.preventDefault();
+            if(contextMenuSettingsMenu.style.display === "none"){
+                contextMenuSettingsMenu.style.display = "block";
+            } else {
+                contextMenuSettingsMenu.style.display = "none";
+            }
+        return false;
+    };
+    contextMenuSettingsMenu = document.createElement("ul");
+    contextMenuSettingsMenu.style.display = "none";
+    contextMenuSettings.appendChild(contextMenuSettingsMenu);
+    
+    /* Updater interval */
+    contextMenuSettingsMenuUpdateInterval = document.createElement("li");
+    contextMenuSettingsMenu.appendChild(contextMenuSettingsMenuUpdateInterval);
+    
+    contextMenuSettingsMenuUpdateIntervalImg = document.createElement("img");
+    contextMenuSettingsMenuUpdateIntervalImg.alt = "Uppdatera intervall iconen";
+    contextMenuSettingsMenuUpdateIntervalImg.title = "Klicka här för att ändra uppdaterings intervall";
+    contextMenuSettingsMenuUpdateIntervalImg.src = "DESKTOPAPP/pics/appIcons/menuIcons/updateinterval.png";
+    
+    contextMenuSettingsMenuUpdateIntervalA = document.createElement("a");
+    contextMenuSettingsMenuUpdateIntervalA.innerHTML = "Uppdateringsintervall...";
+    contextMenuSettingsMenuUpdateIntervalA.onmousedown = function(e) {
+        e.preventDefault;
+        that.updateMenu();
+        return false;
+    };
+    contextMenuSettingsMenuUpdateIntervalA.insertBefore(contextMenuSettingsMenuUpdateIntervalImg, contextMenuSettingsMenuUpdateIntervalA.childNodes[0]);
+    contextMenuSettingsMenuUpdateInterval.appendChild(contextMenuSettingsMenuUpdateIntervalA);
+    
+    /* Change number of messages */
+    contextMenuSettingsMenuMsgNumber = document.createElement("li");
+    contextMenuSettingsMenu.appendChild(contextMenuSettingsMenuMsgNumber);
+    
+    contextMenuSettingsMenuMsgNumberImg = document.createElement("img");
+    contextMenuSettingsMenuMsgNumberImg.alt = "Ändra antal meddelanden iconen";
+    contextMenuSettingsMenuMsgNumberImg.title = "Klicka här för att ändra antal meddelanden som visas";
+    contextMenuSettingsMenuMsgNumberImg.src = "DESKTOPAPP/pics/appIcons/menuIcons/speechbubbles.png";
+    
+    contextMenuSettingsMenuMsgNumberA = document.createElement("a");
+    contextMenuSettingsMenuMsgNumberA.innerHTML = "Antal meddelanden...";
+    contextMenuSettingsMenuMsgNumberA.onmousedown = function(e) {
+        e.preventDefault;
+        that.changeMsgNumberMenu();
+        return false;
+    };
+    contextMenuSettingsMenuMsgNumberA.insertBefore(contextMenuSettingsMenuMsgNumberImg, contextMenuSettingsMenuMsgNumberA.childNodes[0]);
+    contextMenuSettingsMenuMsgNumber.appendChild(contextMenuSettingsMenuMsgNumberA);
+    
+    /* Change username */
+    contextMenuSettingsMenuUsername = document.createElement("li");
+    contextMenuSettingsMenu.appendChild(contextMenuSettingsMenuUsername);
+    
+    contextMenuSettingsMenuUsernameImg = document.createElement("img");
+    contextMenuSettingsMenuUsernameImg.alt = "Ändra alias iconen";
+    contextMenuSettingsMenuUsernameImg.title = "Klicka här för att ändra ditt alias";
+    contextMenuSettingsMenuUsernameImg.src = "DESKTOPAPP/pics/appIcons/menuIcons/user.png";
+    
+    contextMenuSettingsMenuUsernameA = document.createElement("a");
+    contextMenuSettingsMenuUsernameA.innerHTML = "Alias...";
+    contextMenuSettingsMenuUsernameA.onmousedown = function(e) {
+        e.preventDefault;
+        that.changeUsernameMenu();
+        return false;
+    };
+    contextMenuSettingsMenuUsernameA.insertBefore(contextMenuSettingsMenuUsernameImg, contextMenuSettingsMenuUsernameA.childNodes[0]);
+    contextMenuSettingsMenuUsername.appendChild(contextMenuSettingsMenuUsernameA);
+    
+    /* Update window */
+    contextMenuSettingsMenuUpdate = document.createElement("li");
+    contextMenuSettingsMenu.appendChild(contextMenuSettingsMenuUpdate);
+    
+    contextMenuSettingsMenuUpdateImg = document.createElement("img");
+    contextMenuSettingsMenuUpdateImg.alt = "Updatera iconen";
+    contextMenuSettingsMenuUpdateImg.title = "Klicka här för att uppdatera fönstret";
+    contextMenuSettingsMenuUpdateImg.src = "DESKTOPAPP/pics/appIcons/menuIcons/update.png";
+    
+    contextMenuSettingsMenuUpdateA = document.createElement("a");
+    contextMenuSettingsMenuUpdateA.innerHTML = "Uppdatera fönstret";
+    contextMenuSettingsMenuUpdateA.onmousedown = function(e) {
+        e.preventDefault;
+        that.getAjax();
+        return false;
+    };
+    contextMenuSettingsMenuUpdateA.insertBefore(contextMenuSettingsMenuUpdateImg, contextMenuSettingsMenuUpdateA.childNodes[0]);
+    contextMenuSettingsMenuUpdate.appendChild(contextMenuSettingsMenuUpdateA);
+    
+    this.contextMenu.appendChild(contextMenuSettings);
 };
 
 DESKTOPAPP.apps.LabbyMezzage.Message = function(message, date, name) {
@@ -290,9 +508,9 @@ DESKTOPAPP.apps.LabbyMezzage.Message.prototype.getHTMLText = function() {
 DESKTOPAPP.apps.LabbyMezzage.Message.prototype.getDateText = function() {
     var hours, minutes;
     hours = this.getDate().getHours();
-    hours = (hours > 10) ? hours : "0" + hours;
+    hours = (hours > 9) ? hours : "0" + hours;
     minutes = this.getDate().getMinutes();
-    minutes = (minutes > 10) ? minutes : "0" + minutes;
+    minutes = (minutes > 9) ? minutes : "0" + minutes;
     return hours + ":" + minutes;
 };
 
