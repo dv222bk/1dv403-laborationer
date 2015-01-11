@@ -25,6 +25,11 @@ DESKTOPAPP.Desktop = function(elementID) {
             "name": "Memory",
             "iconURL": "DESKTOPAPP/pics/appIcons/memory.png",
             "appURL": DESKTOPAPP.apps.Memory
+        },
+        {
+            "name": "LabbyMezzage",
+            "iconURL": "DESKTOPAPP/pics/appIcons/labbymezzage.png",
+            "appURL": DESKTOPAPP.apps.LabbyMezzage
         }
     ];
     

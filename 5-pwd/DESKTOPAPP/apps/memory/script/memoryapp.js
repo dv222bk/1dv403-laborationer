@@ -16,7 +16,7 @@ DESKTOPAPP.apps.Memory = function(app, desktop) {
     /* game specific data */
     rows = 4;
     cols = 4;
-    pictureArray = RandomGenerator.getPictureArray(4, 4);
+    pictureArray = DESKTOPAPP.apps.Memory.Random.getPictureArray(4, 4);
     tries = 0;
     complete = 0;
     currentDimensions = "4x4";
@@ -27,7 +27,7 @@ DESKTOPAPP.apps.Memory = function(app, desktop) {
     };
     
     this.setPictureArray = function() {
-        pictureArray = RandomGenerator.getPictureArray(rows, cols);
+        pictureArray = DESKTOPAPP.apps.Memory.Random.getPictureArray(rows, cols);
     };
     
     this.getRows = function() {

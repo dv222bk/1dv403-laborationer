@@ -1,6 +1,10 @@
 "use strict";
 
-var RandomGenerator = {
+var DESKTOPAPP = DESKTOPAPP || {};
+DESKTOPAPP.apps = DESKTOPAPP.apps || {};
+DESKTOPAPP.apps.Memory = DESKTOPAPP.apps.Memory || {};
+
+DESKTOPAPP.apps.Memory.Random = {
 	
 	/*
 		Denna metod tar antalet rader och columner som inparameter.
