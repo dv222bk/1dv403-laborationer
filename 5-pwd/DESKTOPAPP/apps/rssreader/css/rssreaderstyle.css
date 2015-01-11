@@ -63,10 +63,10 @@ table {
     display: block;
 }
 .RSSReaderApp h2 {
-    width: 96%;
+    width: 100%;
     font-weight: bolder;
     font-size: 0.9em;
-    padding: 2%;
+    padding: 0.5em 0;
     margin-top: 1em;
     background-color: #c7c2b0;
     display: inline-block;
