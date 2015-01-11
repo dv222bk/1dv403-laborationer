@@ -227,7 +227,7 @@ DESKTOPAPP.Desktop.prototype.startScreenSaver = function() {
     var text;
     text = document.createElement("p");
     text.className = "screenSaver";
-    text.innerHTML = "SCREEN SAVER";
+    text.innerHTML = "SCREENSAVER";
     this.setScreenSaverInterval(setInterval(moveText, 2000));
     this.overlay.appendChild(text);
     this.toggleOverlay();
