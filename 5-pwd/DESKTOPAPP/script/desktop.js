@@ -3,7 +3,8 @@
 var DESKTOPAPP = DESKTOPAPP || {};
 
 DESKTOPAPP.Desktop = function(elementID) {
-    var openWindows, lastWindowX, lastWindowY, zIndex;
+    var openWindows, lastWindowX, lastWindowY, zIndex, idleTime, increaseIdleTimeInterval, screenSaverInterval;
+    var that = this;
 
     /* root element */
     this.root = document.getElementById(elementID);
@@ -37,6 +38,40 @@ DESKTOPAPP.Desktop = function(elementID) {
     lastWindowX = 20;
     lastWindowY = 20;
     zIndex = 1;
+    idleTime = 0;
+    increaseIdleTimeInterval = setInterval(increaseIdleTime, 10000);
+    console.log(increaseIdleTimeInterval);
+    
+    document.onmousemove = function() {
+        that.stopScreenSaver();
+    };
+    
+    document.onkeypress = function() {
+        that.stopScreenSaver();
+    };
+    
+    function increaseIdleTime() {
+        idleTime += 1;
+        if(idleTime === 6) {
+            that.startScreenSaver();
+        }
+    }
+    
+    this.resetIdleTime = function() {
+        idleTime = 0;
+    };
+    
+    this.getIdleTime = function() {
+        return idleTime;
+    };
+    
+    this.clearScreenSaverInterval = function() {
+        screenSaverInterval = null;
+    };
+    
+    this.setScreenSaverInterval = function(interval) {
+        screenSaverInterval = interval;
+    };
     
     this.getWindows = function() {
         return openWindows;
@@ -186,4 +221,98 @@ DESKTOPAPP.Desktop.prototype.toggleOverlay = function() {
         this.overlay.style.visibility = "visible";
     }
     this.overlay.style.zIndex = this.getZIndex() + 1;
+};
+
+DESKTOPAPP.Desktop.prototype.startScreenSaver = function() {
+    var text;
+    text = document.createElement("p");
+    text.className = "screenSaver";
+    text.innerHTML = "SCREEN SAVER";
+    this.setScreenSaverInterval(setInterval(moveText, 2000));
+    this.overlay.appendChild(text);
+    this.toggleOverlay();
+    
+    function moveText() {
+        var randomNumber = Math.floor((Math.random() * 9) + 1);
+        text.style.left = "0";
+        text.style.top = "0";
+        switch(randomNumber) {
+            case 1: 
+                text.style.top = "20%";
+                text.style.left = "12%";
+                break;
+            case 2: 
+                text.style.top = "25%";
+                text.style.left = "25%";
+                break;
+            case 3: 
+                text.style.top = "50%";
+                text.style.left = "50%";
+                break;
+            case 4: 
+                text.style.top = "80%";
+                text.style.left = "60%";
+                break;
+            case 5: 
+                text.style.top = "72%";
+                text.style.left = "30%";
+                break;
+            case 6: 
+                text.style.top = "12%";
+                text.style.left = "52%";
+                break;
+            case 7: 
+                text.style.top = "64%";
+                text.style.left = "32%";
+                break;
+            case 8: 
+                text.style.top = "67%";
+                text.style.left = "2%";
+                break;
+            case 9: 
+                text.style.top = "14%";
+                text.style.left = "8%";
+                break;
+        }
+        
+        randomNumber = Math.floor((Math.random() * 9) + 1);
+        switch(randomNumber) {
+            case 1: 
+                text.style.color = "#FF8300";
+                break;
+            case 2: 
+                text.style.color = "#48A5F8";
+                break;
+            case 3: 
+                text.style.color = "#EF5F20";
+                break;
+            case 4: 
+                text.style.color = "#C397D8";
+                break;
+            case 5: 
+                text.style.color = "#62A83F";
+                break;
+            case 6: 
+                text.style.color = "#FFDE3D";
+                break;
+            case 7: 
+                text.style.color = "#E9D7D2";
+                break;
+            case 8: 
+                text.style.color = "#FFFFFF";
+                break;
+            case 9: 
+                text.style.color = "#ACACAC";
+                break;
+        }
+    }
+};
+
+DESKTOPAPP.Desktop.prototype.stopScreenSaver = function() {
+    if(this.getIdleTime() >= 6) {
+        this.clearScreenSaverInterval();
+        this.overlay.removeChild(this.overlay.querySelector("p"));
+        this.toggleOverlay();
+    }
+    this.resetIdleTime();
 };

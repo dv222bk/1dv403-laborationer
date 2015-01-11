@@ -107,6 +107,13 @@ table {
 .desktopApp .overlay .alertWindow select {
     float: left;
 }
+.desktopApp .overlay .screenSaver {
+    position: absolute;
+    font-size: 5em;
+    color: #FFFFFF;
+    top: 25%;
+    left: 25%;
+}
 .desktopApp .desktopToolbar {
     position: absolute;
     bottom: 0;
