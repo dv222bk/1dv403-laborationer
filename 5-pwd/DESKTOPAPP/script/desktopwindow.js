@@ -180,6 +180,10 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
             }
         };
         this.statusField.appendChild(windowResize);
+    } else {
+        /* Add border radius */
+        this.statusField.style.borderBottomRightRadius = "0.3em";
+        this.windowHolder.style.borderBottomRightRadius = "1em";
     }
     
     if(height !== undefined) {
@@ -318,6 +322,6 @@ DESKTOPAPP.DesktopWindow.prototype.updateStatus = function() {
     hours = (hours > 9) ? hours : "0" + hours;
     minutes = currentTime.getMinutes();
     minutes = (minutes > 9) ? minutes : "0" + minutes;
-    p.innerHTML = "Senast Uppdaterad: " + hours + ":" + minutes;
+    p.innerHTML = "Senast uppdaterad: " + hours + ":" + minutes;
     this.statusField.insertBefore(p, this.statusField.childNodes[0]);
 };
