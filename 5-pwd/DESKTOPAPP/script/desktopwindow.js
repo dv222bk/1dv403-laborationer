@@ -310,10 +310,14 @@ DESKTOPAPP.DesktopWindow.prototype.removeStatus = function() {
 };
 
 DESKTOPAPP.DesktopWindow.prototype.updateStatus = function() {
-    var p, currentTime;
+    var p, currentTime, hours, minutes;
     this.removeStatus();
     currentTime = new Date();
     p = document.createElement("p");
-    p.innerHTML = "Senast Uppdaterad: " + currentTime.getHours() + ":" + currentTime.getMinutes();
+    hours = currentTime.getHours();
+    hours = (hours > 10) ? hours : "0" + hours;
+    minutes = currentTime.getMinutes();
+    minutes = (minutes > 10) ? minutes : "0" + minutes;
+    p.innerHTML = "Senast Uppdaterad: " + hours + ":" + minutes;
     this.statusField.insertBefore(p, this.statusField.childNodes[0]);
 };

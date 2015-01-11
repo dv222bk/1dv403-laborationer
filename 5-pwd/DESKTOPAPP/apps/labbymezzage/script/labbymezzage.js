@@ -4,7 +4,7 @@ var DESKTOPAPP = DESKTOPAPP || {};
 DESKTOPAPP.apps = DESKTOPAPP.apps || {};
 
 DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
-    var messages, userName;
+    var messages, userName, updateTime, ajaxInterval, numberOfMsgs, lastXMLGet;
     
     messages = [];
     
@@ -12,8 +12,11 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
     this.desktop = desktop;
     
     this.messageHolder;
+    this.textarea;
     
     userName = "test";
+    updateTime = 10000;
+    numberOfMsgs = 50;
     
     /* Inherit from DesktopWindow */
     DESKTOPAPP.DesktopWindow.call(this);
@@ -22,8 +25,12 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
         return messages;
     };
     
-    this.getMessage = function(messageID) {
-        return messages[messageID];
+    this.getMessage = function(messageArrayID) {
+        return messages[messageArrayID];
+    };
+    
+    this.removeMessages = function() {
+        messages = [];
     };
     
     this.getUserName = function() {
@@ -34,6 +41,38 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
         userName = _userName;
     };
     
+    this.getUpdateTime = function() {
+        return updateTime;
+    };
+    
+    this.setUpdateTime = function(miliSeconds) {
+        updateTime = miliSeconds;
+    };
+    
+    this.setAjaxInterval = function(interval) {
+        ajaxInterval = interval;
+    };
+    
+    this.clearAjaxInterval = function() {
+        clearInterval(ajaxInterval);
+    };
+    
+    this.getNumberOfMsgs = function() {
+        return numberOfMsgs;
+    };
+    
+    this.setNumberOfMsgs = function(number) {
+        numberOfMsgs = number;
+    };
+    
+    this.getLastXMLGet = function() {
+        return lastXMLGet;
+    };
+    
+    this.setLastXMLGet = function(XMLGet) {
+        lastXMLGet = XMLGet;
+    };
+    
     this.createWindow(this.desktop, true);
     this.createApp();
 };
@@ -42,7 +81,7 @@ DESKTOPAPP.apps.LabbyMezzage = function(app, desktop) {
 DESKTOPAPP.apps.LabbyMezzage.prototype = new DESKTOPAPP.DesktopWindow();
 
 DESKTOPAPP.apps.LabbyMezzage.prototype.createApp = function() {
-    var appBody, writeMessage, textarea;
+    var appBody, writeMessage;
     var that = this;
     
     /* Section */
@@ -61,38 +100,117 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.createApp = function() {
     appBody.appendChild(writeMessage);
     
     /* Textarea */
-    textarea = document.createElement("textarea");
-    textarea.onkeypress = function(e) {
+    this.textarea = document.createElement("textarea");
+    this.textarea.onkeypress = function(e) {
         if(e.keyCode == 13) {
             if(!e.shiftKey) {
                 e.preventDefault();
-                that.sendMessage();
+                that.postAjax();
                 return false;
             }
         }
     };
-    writeMessage.appendChild(textarea);
+    writeMessage.appendChild(this.textarea);
+
+    this.getAjax();
+    this.setGetInterval(this.getUpdateTime());
 };
 
-DESKTOPAPP.apps.LabbyMezzage.prototype.sendMessage = function() {
-    var textarea = this.windowBody.querySelector("textarea");
-    // Remove all HTML tags
-    textarea.value = textarea.value.replace( /<[^>]+>/g, '' );
-    if(textarea.value.trim() !== "") {
-        this.getMessages().push(new DESKTOPAPP.apps.LabbyMezzage.Message(textarea.value.trim(), new Date(), this.getUserName()));
-        this.renderMessage(this.getMessages().length - 1);
-    }
-    textarea.value = "";
+DESKTOPAPP.apps.LabbyMezzage.prototype.closeWindow = function() {
+    this.desktop.removeWindow(this.windowHolder);
+    this.windowHolder.parentNode.removeChild(this.windowHolder);
+    this.clearAjaxInterval();
 };
 
-DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessage = function(messageID) {
-    var messageContainer, nameDate, name, date, messageText;
+DESKTOPAPP.apps.LabbyMezzage.prototype.getAjax = function() {
+    var xhr, parser, XMLData, message;
     var that = this;
+    
+    xhr = new XMLHttpRequest();
+    xhr.abort();
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState === 4) {
+            that.updateStatus();
+            
+            if(xhr.status === 200) {
+                if (window.DOMParser) {
+                    parser = new DOMParser();
+                    XMLData=parser.parseFromString(xhr.responseText,"text/xml");
+                /* For Internet Explorer */
+                } else {
+                    XMLData = new ActiveXObject("Microsoft.XMLDOM");
+                    XMLData.async = false;
+                    XMLData.loadXML(xhr.responseText);
+                }
+                
+                if(XMLData !== that.getLastXMLGet() && that.getLastXMLGet() !== null) {
+                    that.removeMessages();
+                    
+                    for(message = 0; message < XMLData.querySelectorAll("message").length; message += 1) {
+                        that.getMessages().push(new DESKTOPAPP.apps.LabbyMezzage.Message(
+                            XMLData.querySelectorAll("message text")[message].innerHTML,
+                            new Date(+XMLData.querySelectorAll("message time")[message].innerHTML),
+                            XMLData.querySelectorAll("message author")[message].innerHTML
+                        ));
+                    }
+                    that.renderMessages();
+                    that.setLastXMLGet(XMLData);
+                }
+            } else {
+                that.messageHolder.innerHTML = "Läsfel. Status: " + xhr.status;
+            }
+        } else if(xhr.readyState === 1) {
+            that.showLoading();
+        }
+    };
+    xhr.open("GET", "http://homepage.lnu.se/staff/tstjo/labbyserver/getMessage.php?history=" + this.getNumberOfMsgs(), true);
+    xhr.send(null);
+};
+
+DESKTOPAPP.apps.LabbyMezzage.prototype.postAjax = function() {
+    var xhr, JSONData;
+    var that = this;
+    
+    
+    this.textarea.value = this.textarea.value.replace( /<[^>]+>/g, '' ).trim();
+    if(this.textarea.value.trim() !== "") {
+        xhr = new XMLHttpRequest();
+        xhr.abort();
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState === 4) {
+                that.updateStatus();
+                
+                if(xhr.status === 200) {
+                    that.getAjax();
+                } else {
+                    that.messageHolder.innerHTML = "Läsfel. Status: " + xhr.status;
+                }
+            } else if(xhr.readyState === 1) {
+                that.showLoading();
+            }
+        };
+        xhr.open("POST", "http://homepage.lnu.se/staff/tstjo/labbyserver/setMessage.php", true);
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhr.send("text=" + this.textarea.value + "&username=" + this.getUserName());
+    }
+    this.textarea.value = "";
+};
+
+DESKTOPAPP.apps.LabbyMezzage.prototype.setGetInterval = function(miliSeconds) {
+    var that = this;
+    this.clearAjaxInterval();
+    this.setAjaxInterval(setInterval(function() {
+       that.getAjax(); 
+    }, miliSeconds));
+};
+
+DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessage = function(messageArrayID) {
+    var messageContainer, nameDate, name, date, messageText;
     
     /* Container */
     messageContainer = document.createElement("div");
     /* Insert the new message at the top of the holder div, at the bottom of the message list */
-    this.messageHolder.insertBefore(messageContainer, this.messageHolder.childNodes[messageID]);
+    this.messageHolder.insertBefore(messageContainer, this.messageHolder.childNodes[messageArrayID]);
     
     /* nameDate */
     nameDate = document.createElement("div");
@@ -100,17 +218,17 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessage = function(messageID) {
     
     /* name */
     name = document.createElement("p");
-    name.innerHTML = this.getMessage(messageID).getName();
+    name.innerHTML = this.getMessage(messageArrayID).getName();
     nameDate.appendChild(name);
     
     /* date */
     date = document.createElement("p");
-    date.innerHTML = this.getMessage(messageID).getDateText();
+    date.innerHTML = this.getMessage(messageArrayID).getTimeStamp();
     nameDate.appendChild(date);
     
     /* MsgText */
     messageText = document.createElement("p");
-    messageText.innerHTML = this.getMessage(messageID).getHTMLText();
+    messageText.innerHTML = this.getMessage(messageArrayID).getHTMLText();
     messageContainer.appendChild(messageText);
     
     /* Scroll to the bottom of the page, in case the user wasn't already there 
@@ -119,14 +237,11 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessage = function(messageID) {
 };
 
 DESKTOPAPP.apps.LabbyMezzage.prototype.renderMessages = function() {
-    var divs, i;
+    var i;
     
     // Remove all messages
-    divs = this.windowBody.querySelectorAll("div");
-    /* First div element is the holder div, don't remove it */
-    for(i = 1; i < divs.length; i+=1) {
-        /* To remove an object, you need to target the parent */
-        divs[i].parentNode.removeChild(divs[i]);
+    while (this.messageHolder.firstChild) {
+        this.messageHolder.removeChild(this.messageHolder.firstChild);
     }
     
     // Render all messages
@@ -167,15 +282,22 @@ DESKTOPAPP.apps.LabbyMezzage.Message.prototype.toString = function() {
 };
 
 DESKTOPAPP.apps.LabbyMezzage.Message.prototype.getHTMLText = function() {
-    return this.getText().replace(/\n/g, "<br />");
+    if(this.getText() !== null) {
+        return this.getText().replace(/\n/g, "<br />");
+    }
 };
 
 DESKTOPAPP.apps.LabbyMezzage.Message.prototype.getDateText = function() {
-    return this.getDate().toLocaleTimeString();
+    var hours, minutes;
+    hours = this.getDate().getHours();
+    hours = (hours > 10) ? hours : "0" + hours;
+    minutes = this.getDate().getMinutes();
+    minutes = (minutes > 10) ? minutes : "0" + minutes;
+    return hours + ":" + minutes;
 };
 
 DESKTOPAPP.apps.LabbyMezzage.Message.prototype.getTimeStamp = function() {
-    var monthNames = [ "januari", "februari", "mars", "april", "maj", "juni",
-    "juli", "agusti", "september", "october", "november", "december" ];
-    return "Inlägget skapades den " + (this.getDate().getDate()) + " " + monthNames[this.getDate().getMonth()] + " " + this.getDate().getFullYear() + " klockan " + this.getDateText();
+    var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Agu", "Sep", "Oct", "Nov", "Dec" ];
+    return this.getDate().getDate() + " " + monthNames[this.getDate().getMonth()] + " " + this.getDate().getFullYear() + " " + this.getDateText();
 };
