@@ -5,9 +5,11 @@ var DESKTOPAPP = DESKTOPAPP || {};
 DESKTOPAPP.DesktopWindow = function() {
     /* Move Window variables */
     var currentX, currentY, moveWindowFunction, removeMoveWindowEventsFunction, resizeWindowFunction, removeResizeWindowEventsFunction;
+    var that = this;
     
     this.windowBody;
-    this.windowHolder;
+    this.windowHolder = document.createElement("div");
+    this.windowHolder.className = "windowHolder";
     this.contextMenu;
     this.contextMenuArkiv;
     this.statusField;
@@ -24,6 +26,9 @@ DESKTOPAPP.DesktopWindow = function() {
     };
     this.setCurrentY = function(yCord) {
         currentY = yCord;
+    };
+    this.getWindowHolder = function() {
+        return that.windowHolder;
     };
     this.getMoveWindowFunction = function() {
         return moveWindowFunction;
@@ -49,6 +54,7 @@ DESKTOPAPP.DesktopWindow = function() {
     this.setRemoveResizeWindowEventsFunction = function(windowFunction) {
         removeResizeWindowEventsFunction = windowFunction;
     };
+    
 };
 
 DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, width, height) {
@@ -57,20 +63,15 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
     var that = this;
     
     this.desktop = desktop;
+    desktop.addWindow(this);
+    desktop.root.querySelector("section").appendChild(this.windowHolder);
     
     /* Window Holder */
-    this.windowHolder = document.createElement("div");
-    this.windowHolder.className = "windowHolder";
-    desktop.updateLastWindowCords();
     this.windowHolder.style.top = (desktop.getLastWindowY() + 20) + "px";
     this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + "px";
-    this.windowHolder.style.zIndex = desktop.getZIndex();
-    this.windowHolder.windowClass = this;
     this.windowHolder.onmousedown = function(e) {
-        desktop.makeWindowLast(this);
+        desktop.makeWindowLast(that);
     };
-    desktop.root.querySelector("section").appendChild(this.windowHolder);
-    desktop.addWindow(this.windowHolder);
     
     /* WindowHeader */
     windowHeader = document.createElement("div");
@@ -110,7 +111,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
     closeButton.innerHTML = "x";
     closeButton.onclick = function(e) {
         e.preventDefault();
-        that.desktop.removeWindow(that.windowHolder, that);
+        that.desktop.removeWindow(that);
         return false;
     };
     windowHeaderTop.appendChild(closeButton);
@@ -147,7 +148,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
     contextMenuArkivMenuCloseA.innerHTML = "Stäng fönstret";
     contextMenuArkivMenuCloseA.onmousedown = function(e) {
         e.preventDefault;
-        that.desktop.removeWindow(that.windowHolder, that);
+        that.desktop.removeWindow(that);
         return false;
     };
     contextMenuArkivMenuCloseA.insertBefore(contextMenuArkivMenuCloseImg, contextMenuArkivMenuCloseA.childNodes[0]);
@@ -194,6 +195,8 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
     if(width !== undefined) {
         this.windowHolder.style.width = width + "px";
     }
+    
+    desktop.updateLastWindowCords();
 };
 
 DESKTOPAPP.DesktopWindow.prototype.moveWindow = function(e) {
@@ -208,12 +211,13 @@ DESKTOPAPP.DesktopWindow.prototype.moveWindow = function(e) {
         this.windowHolder.style.top = parseInt(this.windowHolder.style.top, 10) - this.getCurrentY() + cords.y + "px";
         this.setCurrentY(cords.y);
     }
+    this.desktop.updateLastWindowCords();
 };
 
 DESKTOPAPP.DesktopWindow.prototype.resizeWindow = function(e) {
     var cords, validateNewWindowSize;
     cords = this.calculateMousePosition(e);
-    validateNewWindowSize = this.validateNewWindowSize(this.windowHolder.clientWidth - this.getCurrentX() + cords.x, this.windowHolder.offsetHeight - this.getCurrentY() + cords.y);
+    validateNewWindowSize = this.validateNewWindowSize(this.windowHolder.clientWidth - this.getCurrentX() + cords.x, this.windowHolder.clientHeight - this.getCurrentY() + cords.y);
     if(validateNewWindowSize.x) {
         this.windowHolder.style.width = this.windowHolder.clientWidth - this.getCurrentX() + cords.x + "px";
         this.setCurrentX(cords.x);
@@ -241,7 +245,7 @@ DESKTOPAPP.DesktopWindow.prototype.validateNewWindowSize = function(width, heigh
     minHeight = 300;
     cords = this.getWindowHolderCords();
     maxWidth = window.innerWidth - cords.x;
-    maxHeight = window.innerHeight - this.desktop.root.querySelector(".desktopToolbar").clientHeight - cords.y;
+    maxHeight = window.innerHeight - this.desktop.root.querySelector(".desktopToolbar").offsetHeight - cords.y;
     result = {
         x: ((width <= maxWidth) && (width >= minWidth)) ? true : false,
         y: ((height <= maxHeight) && (height >= minHeight)) ? true : false

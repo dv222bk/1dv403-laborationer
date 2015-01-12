@@ -75,9 +75,9 @@ DESKTOPAPP.Desktop = function(elementID) {
     this.getWindows = function() {
         return openWindows;
     };
-    this.addWindow = function(windowHolder) {
-        openWindows.push(windowHolder);
-        windowHolder.style.zIndex = zIndex;
+    this.addWindow = function(windowApp) {
+        openWindows.push(windowApp);
+        windowApp.getWindowHolder().style.zIndex = zIndex;
         this.root.querySelector(".desktopToolbar").style.zIndex = zIndex + 1;
         this.increaseZIndex();
     };
@@ -105,8 +105,8 @@ DESKTOPAPP.Desktop = function(elementID) {
     /* Close window menu when clicking somewhere other than the menu */
     document.onmousedown = function(e) {
         var menu, i, k;
-        for(i = 0; i < openWindows.length; i += 1) {
-            menu = openWindows[i].querySelectorAll(".contextMenu ul ");
+        for(i = 0; i < openWindows.length - 1; i += 1) {
+            menu = openWindows[i].getWindowHolder().querySelectorAll(".contextMenu ul ");
             for (k = 0; k < menu.length; k++) {
                 if(menu[k].style.display !== "none" && menu[k] !== e.target && menu[k].parentNode !== e.target) {
                     menu[k].style.display = "none";
@@ -203,25 +203,25 @@ DESKTOPAPP.Desktop.prototype.getWindowCords = function(windowHolder) {
     if(yPosition >= maxY) {
         yPosition = 0;
     }
-    
+
     return { x: xPosition, y: yPosition };
 };
 
 DESKTOPAPP.Desktop.prototype.updateLastWindowCords = function() {
     var cords;
-    cords = this.getWindowCords(this.getWindows()[this.getWindows().length - 1]);
+    cords = this.getWindowCords(this.getWindows()[this.getWindows().length - 1].getWindowHolder());
     this.setLastWindowX(cords.x);
     this.setLastWindowY(cords.y);
 };
 
-DESKTOPAPP.Desktop.prototype.removeWindow = function(windowHolder) {
-    var index = this.getWindows().indexOf(windowHolder);
+DESKTOPAPP.Desktop.prototype.removeWindow = function(windowApp) {
+    var index = this.getWindows().indexOf(windowApp);
     if (index > -1) {
-        windowHolder.parentNode.removeChild(windowHolder);
-        if (typeof windowHolder.windowClass.closeWindow == 'function') {
-            windowHolder.windowClass.closeWindow();
+        if (typeof windowApp.closeWindow == 'function') {
+            windowApp.closeWindow();
         }
         this.getWindows().splice(index, 1);
+        windowApp.getWindowHolder().parentNode.removeChild(windowApp.getWindowHolder());
     }
 };
 
@@ -232,10 +232,12 @@ DESKTOPAPP.Desktop.prototype.closeAllWindows = function() {
     }
 };
 
-DESKTOPAPP.Desktop.prototype.makeWindowLast = function(windowHolder) {
-    if(this.getWindows().indexOf(windowHolder) !== (this.getWindows().length - 1)) {
-        this.removeWindow(windowHolder);
-        this.addWindow(windowHolder);
+DESKTOPAPP.Desktop.prototype.makeWindowLast = function(windowApp) {
+    var index = this.getWindows().indexOf(windowApp);
+    if((index !== (this.getWindows().length - 1)) && index > -1) {
+        this.getWindows().splice(index, 1);
+        this.addWindow(windowApp);
+        this.updateLastWindowCords();
     }
 };
 
