@@ -113,6 +113,10 @@ table {
     color: #FFFFFF;
     top: 25%;
     left: 25%;
+    -webkit-transition: 2s ease-in-out;
+    -moz-transition: 2s ease-in-out;
+    -o-transition: 2s ease-in-out;
+    transition: 2s ease-in-out;
 }
 .desktopApp .desktopToolbar {
     position: absolute;
@@ -128,6 +132,9 @@ table {
     height: 2em;
     width: 2em;
     margin-right: 0.5em;
+    -webkit-transition: 0.1s ease;
+    -moz-transition: 0.1s ease;
+    -o-transition: 0.1s ease;
     transition: 0.1s ease;
 }
 .desktopApp .appIcon:hover {

@@ -233,47 +233,10 @@ DESKTOPAPP.Desktop.prototype.startScreenSaver = function() {
     this.toggleOverlay();
     
     function moveText() {
-        var randomNumber = Math.floor((Math.random() * 9) + 1);
-        text.style.left = "0";
-        text.style.top = "0";
-        switch(randomNumber) {
-            case 1: 
-                text.style.top = "20%";
-                text.style.left = "12%";
-                break;
-            case 2: 
-                text.style.top = "25%";
-                text.style.left = "25%";
-                break;
-            case 3: 
-                text.style.top = "50%";
-                text.style.left = "50%";
-                break;
-            case 4: 
-                text.style.top = "80%";
-                text.style.left = "60%";
-                break;
-            case 5: 
-                text.style.top = "72%";
-                text.style.left = "30%";
-                break;
-            case 6: 
-                text.style.top = "12%";
-                text.style.left = "52%";
-                break;
-            case 7: 
-                text.style.top = "64%";
-                text.style.left = "32%";
-                break;
-            case 8: 
-                text.style.top = "67%";
-                text.style.left = "2%";
-                break;
-            case 9: 
-                text.style.top = "14%";
-                text.style.left = "8%";
-                break;
-        }
+        var randomNumber = Math.floor((Math.random() * 80));
+        text.style.top = randomNumber + "%";
+        randomNumber = Math.floor((Math.random() * 60));
+        text.style.left = randomNumber + "%";
         
         randomNumber = Math.floor((Math.random() * 9) + 1);
         switch(randomNumber) {
