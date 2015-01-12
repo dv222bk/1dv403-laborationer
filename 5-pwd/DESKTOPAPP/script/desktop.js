@@ -49,6 +49,10 @@ DESKTOPAPP.Desktop = function(elementID) {
         that.stopScreenSaver();
     };
     
+    document.onclick = function() {
+        that.stopScreenSaver();
+    };
+    
     function increaseIdleTime() {
         idleTime += 1;
         if(idleTime === 6) {
