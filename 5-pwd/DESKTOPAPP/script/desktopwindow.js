@@ -65,6 +65,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
     this.windowHolder.style.top = (desktop.getLastWindowY() + 20) + "px";
     this.windowHolder.style.left = (desktop.getLastWindowX() + 20) + "px";
     this.windowHolder.style.zIndex = desktop.getZIndex();
+    this.windowHolder.windowClass = this;
     this.windowHolder.onmousedown = function(e) {
         desktop.makeWindowLast(this);
     };
@@ -109,7 +110,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
     closeButton.innerHTML = "x";
     closeButton.onclick = function(e) {
         e.preventDefault();
-        that.closeWindow();
+        that.desktop.removeWindow(that.windowHolder, that);
         return false;
     };
     windowHeaderTop.appendChild(closeButton);
@@ -146,7 +147,7 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
     contextMenuArkivMenuCloseA.innerHTML = "Stäng fönstret";
     contextMenuArkivMenuCloseA.onmousedown = function(e) {
         e.preventDefault;
-        that.closeWindow();
+        that.desktop.removeWindow(that.windowHolder, that);
         return false;
     };
     contextMenuArkivMenuCloseA.insertBefore(contextMenuArkivMenuCloseImg, contextMenuArkivMenuCloseA.childNodes[0]);
@@ -193,11 +194,6 @@ DESKTOPAPP.DesktopWindow.prototype.createWindow = function(desktop, resizeable, 
     if(width !== undefined) {
         this.windowHolder.style.width = width + "px";
     }
-};
-
-DESKTOPAPP.DesktopWindow.prototype.closeWindow = function() {
-    this.desktop.removeWindow(this.windowHolder);
-    this.windowHolder.parentNode.removeChild(this.windowHolder);
 };
 
 DESKTOPAPP.DesktopWindow.prototype.moveWindow = function(e) {

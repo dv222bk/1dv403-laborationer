@@ -52,8 +52,6 @@ DESKTOPAPP.apps.RSSReader.prototype.createApp = function() {
 };
 
 DESKTOPAPP.apps.RSSReader.prototype.closeWindow = function() {
-    this.desktop.removeWindow(this.windowHolder);
-    this.windowHolder.parentNode.removeChild(this.windowHolder);
     this.clearRSSInterval();
 };
 

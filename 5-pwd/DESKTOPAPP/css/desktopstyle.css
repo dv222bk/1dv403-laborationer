@@ -128,7 +128,7 @@ table {
     background-color: rgba(0, 0, 0, 0.5);
     border-top: 0.2em solid #222222;
 }
-.desktopApp .appIcon {
+.desktopApp .desktopToolbar .appIcon, .desktopApp .desktopToolbar .closeAllWindows {
     height: 2em;
     width: 2em;
     margin-right: 0.5em;
@@ -137,8 +137,13 @@ table {
     -o-transition: 0.1s ease;
     transition: 0.1s ease;
 }
-.desktopApp .appIcon:hover {
+.desktopApp .desktopToolbar .appIcon:hover, .desktopApp .desktopToolbar .closeAllWindows:hover {
     transform: scale(1.2);
+}
+.desktopApp .desktopToolbar .closeAllWindows {
+    position: absolute;
+    bottom: 0.5em;
+    right: 0.5em;
 }
 .desktopApp .windowHolder {
     position: absolute;

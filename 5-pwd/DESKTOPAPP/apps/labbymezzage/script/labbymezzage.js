@@ -130,8 +130,6 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.createApp = function() {
 };
 
 DESKTOPAPP.apps.LabbyMezzage.prototype.closeWindow = function() {
-    this.desktop.removeWindow(this.windowHolder);
-    this.windowHolder.parentNode.removeChild(this.windowHolder);
     this.clearAjaxInterval();
 };
 

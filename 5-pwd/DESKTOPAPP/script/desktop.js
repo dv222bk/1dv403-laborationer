@@ -40,7 +40,6 @@ DESKTOPAPP.Desktop = function(elementID) {
     zIndex = 1;
     idleTime = 0;
     increaseIdleTimeInterval = setInterval(increaseIdleTime, 10000);
-    console.log(increaseIdleTimeInterval);
     
     document.onmousemove = function() {
         that.stopScreenSaver();
@@ -60,25 +59,21 @@ DESKTOPAPP.Desktop = function(elementID) {
     this.resetIdleTime = function() {
         idleTime = 0;
     };
-    
     this.getIdleTime = function() {
         return idleTime;
     };
-    
     this.clearScreenSaverInterval = function() {
         screenSaverInterval = null;
     };
-    
     this.setScreenSaverInterval = function(interval) {
         screenSaverInterval = interval;
     };
-    
     this.getWindows = function() {
         return openWindows;
     };
-    this.addWindow = function(windowBody) {
-        openWindows.push(windowBody);
-        windowBody.style.zIndex = zIndex;
+    this.addWindow = function(windowHolder) {
+        openWindows.push(windowHolder);
+        windowHolder.style.zIndex = zIndex;
         this.root.querySelector(".desktopToolbar").style.zIndex = zIndex + 1;
         this.increaseZIndex();
     };
@@ -120,7 +115,7 @@ DESKTOPAPP.Desktop = function(elementID) {
 };
 
 DESKTOPAPP.Desktop.prototype.createApp = function() {
-    var appbody, toolbar, appLink, app, i;
+    var appbody, toolbar, appLink, app, i, closeAllWindowsLink, closeAllWindows;
     var that = this;
     
     /* AppBody */
@@ -162,6 +157,22 @@ DESKTOPAPP.Desktop.prototype.createApp = function() {
         appLink.appendChild(app);
         toolbar.appendChild(appLink);
     }
+    
+    /* Close all Windows icon */
+    closeAllWindowsLink = document.createElement("a");
+    closeAllWindowsLink.className = "closeAllWindows";
+    closeAllWindowsLink.onclick = function(e) {
+        e.preventDefault();
+        that.closeAllWindows();
+        return false;
+    };
+    toolbar.appendChild(closeAllWindowsLink);
+    
+    closeAllWindows = document.createElement("img");
+    closeAllWindows.alt = "Klicka här för att stänga alla öppna fönster";
+    closeAllWindows.title = "Stäng alla öppna fönster";
+    closeAllWindows.src = "DESKTOPAPP/pics/appIcons/closeallwindows.png";
+    closeAllWindowsLink.appendChild(closeAllWindows);
 };
 
 /* http://www.kirupa.com/html5/get_element_position_using_javascript.htm */
@@ -199,17 +210,28 @@ DESKTOPAPP.Desktop.prototype.updateLastWindowCords = function() {
     this.setLastWindowY(cords.y);
 };
 
-DESKTOPAPP.Desktop.prototype.removeWindow = function(windowBody) {
-    var index = this.getWindows().indexOf(windowBody);
+DESKTOPAPP.Desktop.prototype.removeWindow = function(windowHolder) {
+    var index = this.getWindows().indexOf(windowHolder);
     if (index > -1) {
+        windowHolder.parentNode.removeChild(windowHolder);
+        if (typeof windowHolder.windowClass.closeWindow == 'function') {
+            windowHolder.windowClass.closeWindow();
+        }
         this.getWindows().splice(index, 1);
     }
 };
 
-DESKTOPAPP.Desktop.prototype.makeWindowLast = function(windowBody) {
-    if(this.getWindows().indexOf(windowBody) !== (this.getWindows().length - 1)) {
-        this.removeWindow(windowBody);
-        this.addWindow(windowBody);
+DESKTOPAPP.Desktop.prototype.closeAllWindows = function() {
+    var i;
+    for (i = this.getWindows().length - 1; i >= 0; i -= 1) {
+        this.removeWindow(this.getWindows()[i]);
+    }
+};
+
+DESKTOPAPP.Desktop.prototype.makeWindowLast = function(windowHolder) {
+    if(this.getWindows().indexOf(windowHolder) !== (this.getWindows().length - 1)) {
+        this.removeWindow(windowHolder);
+        this.addWindow(windowHolder);
     }
 };
 
