@@ -139,8 +139,8 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.getAjax = function() {
     
     this.reloadNumberOfMsgs();
     this.reloadUpdateTime();
-    
-    xhr = new XMLHttpRequest();
+
+    xhr = (window.ActiveXObject) ? (new ActiveXObject("Msxml2.XMLHTTP")) : (new XMLHttpRequest())
     xhr.abort();
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4) {
@@ -149,14 +149,13 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.getAjax = function() {
             if(xhr.status === 200) {
                 if (window.DOMParser) {
                     parser = new DOMParser();
-                    XMLData=parser.parseFromString(xhr.responseText,"text/xml");
+                    XMLData = parser.parseFromString(xhr.responseText, "text/xml");
                 /* For Internet Explorer */
                 } else {
                     XMLData = new ActiveXObject("Microsoft.XMLDOM");
                     XMLData.async = false;
-                    XMLData.loadXML(xhr.responseText);
+                    XMLData.load(xhr.responseText);
                 }
-                
                 if(XMLData !== that.getLastXMLGet() && that.getLastXMLGet() !== null) {
                     that.removeMessages();
                     
@@ -178,6 +177,7 @@ DESKTOPAPP.apps.LabbyMezzage.prototype.getAjax = function() {
         }
     };
     xhr.open("GET", "http://homepage.lnu.se/staff/tstjo/labbyserver/getMessage.php?history=" + this.getNumberOfMsgs(), true);
+    try { xhr.responseType = 'msxml-document'; } catch(e){}
     xhr.send(null);
 };
 
